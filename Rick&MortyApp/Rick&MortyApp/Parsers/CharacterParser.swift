@@ -8,7 +8,7 @@
 import Foundation
 
 struct CharacterParser {
-    static func parseCharactersList(_ data: Data) -> [Character]? {
+    static func parseCharactersList(_ data: Data) throws -> [Character] {
         let decoder = JSONDecoder()
         do {
             let charactersListCodable = try decoder.decode(CharactersListCodable.self, from: data)
@@ -22,12 +22,12 @@ struct CharacterParser {
                           episodesUrls: $0.episode)
             }
         } catch {
-            print(error.localizedDescription)
-            return nil
+            print(String(describing: error))
+            throw ErrorMessage.invalidParsing
         }
     }
     
-    static func parseEpisode(_ data: Data) -> Episode? {
+    static func parseEpisode(_ data: Data) throws -> Episode {
         let decoder = JSONDecoder()
         do {
             let episodeCodable = try decoder.decode(EpisodeCodable.self, from: data)
@@ -36,27 +36,27 @@ struct CharacterParser {
                            date: episodeCodable.date)
         } catch {
             print(error.localizedDescription)
-            return nil
+            throw ErrorMessage.invalidParsing
         }
     }
     
-    static func parseLocation(_ data: Data) -> Location? {
+    static func parseLocation(_ data: Data) throws -> Location {
         let decoder = JSONDecoder()
         do {
             let locationCodable = try decoder.decode(LocationCodable.self, from: data)
             return Location(name: locationCodable.name, type: locationCodable.type)
         } catch {
             print(error.localizedDescription)
-            return nil
+            throw ErrorMessage.invalidParsing
         }
     }
 }
 
 private struct InfoCodable: Codable {
-    let count: String
+    let count: Int
     let pages: Int
-    let next: String
-    let prev: String
+    let next: String?
+    let prev: String?
 }
 
 private struct CharacterLocationCodable: Codable {
