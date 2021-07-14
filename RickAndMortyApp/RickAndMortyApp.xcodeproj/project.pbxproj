@@ -59,6 +59,15 @@
 			path = DetailViewController;
 			sourceTree = "<group>";
 		};
+		22BF9A39269DBE91006BCF56 /* MainViewController */ = {
+			isa = PBXGroup;
+			children = (
+				22F0689A26996BC5007E7E8D /* CharactersListTableViewController.swift */,
+				22F068A026997EFE007E7E8D /* CharacterTableViewCell.swift */,
+			);
+			path = MainViewController;
+			sourceTree = "<group>";
+		};
 		22F0687926996748007E7E8D = {
 			isa = PBXGroup;
 			children = (
@@ -82,9 +91,8 @@
 				22F0688726996749007E7E8D /* SceneDelegate.swift */,
 				22F0688926996749007E7E8D /* ViewController.swift */,
 				22F0688B26996749007E7E8D /* Main.storyboard */,
-				22F0689A26996BC5007E7E8D /* CharactersListTableViewController.swift */,
+				22BF9A39269DBE91006BCF56 /* MainViewController */,
 				224A5878269D59A200C6C922 /* DetailViewController */,
-				22F068A026997EFE007E7E8D /* CharacterTableViewCell.swift */,
 				22F0689D26996D9E007E7E8D /* CharacterCardModel.swift */,
 				224A587A269D5CB900C6C922 /* CharacterDetailModel.swift */,
 				224A587D269D5E9200C6C922 /* LocationStruct.swift */,

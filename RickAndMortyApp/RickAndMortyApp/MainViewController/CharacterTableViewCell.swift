@@ -15,11 +15,11 @@ class CharacterTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        accessoryType = .disclosureIndicator
     }
     
     func setupName(data: Result) {
-        characterName.text = data.name
+        characterName.text = data.name + " id: \(data.id)"
     }
     
     func setupImage(imageString: String) {

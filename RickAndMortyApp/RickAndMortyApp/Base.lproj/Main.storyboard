@@ -12,37 +12,37 @@
         <scene sceneID="Xbr-94-FmX">
             <objects>
                 <tableViewController id="GzU-21-wfp" customClass="CharactersListTableViewController" customModule="RickAndMortyApp" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="R31-Rx-b19">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="150" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="R31-Rx-b19">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CharacterCell" id="HQA-e9-sCj" customClass="CharacterTableViewCell" customModule="RickAndMortyApp" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="414" height="139.5"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CharacterCell" rowHeight="200" id="HQA-e9-sCj" customClass="CharacterTableViewCell" customModule="RickAndMortyApp" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="414" height="200"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="HQA-e9-sCj" id="lfp-VR-Mki">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="139.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="200"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9fr-eE-EPk">
-                                            <rect key="frame" x="10" y="9" width="302.5" height="120.5"/>
+                                            <rect key="frame" x="10" y="9" width="181" height="181"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="120" id="2u1-bY-i7G"/>
+                                                <constraint firstAttribute="width" secondItem="9fr-eE-EPk" secondAttribute="height" multiplier="1:1" id="QEI-OH-QNd"/>
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v80-3S-Bjy">
-                                            <rect key="frame" x="342.5" y="59.5" width="41.5" height="20.5"/>
+                                            <rect key="frame" x="211" y="90" width="173" height="20.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="9fr-eE-EPk" firstAttribute="top" secondItem="lfp-VR-Mki" secondAttribute="top" constant="9" id="Gsr-u2-vAW"/>
                                         <constraint firstItem="9fr-eE-EPk" firstAttribute="leading" secondItem="lfp-VR-Mki" secondAttribute="leading" constant="10" id="IZL-hU-bI0"/>
+                                        <constraint firstItem="v80-3S-Bjy" firstAttribute="leading" secondItem="9fr-eE-EPk" secondAttribute="trailing" constant="20" id="Xj4-jP-N37"/>
                                         <constraint firstItem="v80-3S-Bjy" firstAttribute="centerY" secondItem="lfp-VR-Mki" secondAttribute="centerY" id="aWf-GF-llp"/>
-                                        <constraint firstItem="9fr-eE-EPk" firstAttribute="top" secondItem="lfp-VR-Mki" secondAttribute="top" constant="9" id="bvS-7z-Kxz"/>
-                                        <constraint firstItem="v80-3S-Bjy" firstAttribute="leading" secondItem="9fr-eE-EPk" secondAttribute="trailing" constant="30" id="iFo-Q4-EWh"/>
-                                        <constraint firstAttribute="bottom" secondItem="9fr-eE-EPk" secondAttribute="bottom" constant="10" id="uFd-0e-wjF"/>
+                                        <constraint firstAttribute="bottom" secondItem="9fr-eE-EPk" secondAttribute="bottom" constant="10" id="aqr-E5-u5I"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="v80-3S-Bjy" secondAttribute="trailing" constant="10" id="weQ-UR-eSB"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -61,7 +61,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lA4-ry-vDi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="796" y="469"/>
+            <point key="canvasLocation" x="795.6521739130435" y="468.75"/>
         </scene>
         <!--Detail View Controller-->
         <scene sceneID="TBh-vr-bsM">

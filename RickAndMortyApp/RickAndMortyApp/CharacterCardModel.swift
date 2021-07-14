@@ -12,6 +12,7 @@ struct Character: Codable {
 }
 
 struct Result: Codable {
+    let id: Int
     let name: String
     let image: String
 }
