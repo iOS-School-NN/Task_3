@@ -17,8 +17,14 @@ final class CharacterHeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func fill(_ character: Character) {
-        nameLabel.text = character.name
+    var characterImage: UIImage? {
+        didSet {
+            imageView.image = characterImage
+        }
+    }
+    
+    func fill(character: Character) {
+        imageView.image = UIImage(systemName: "person")
         genderLabel.text = "Gender: " + character.gender
         statusLabel.text = "Status: " + character.status
         speciesLabel.text = "Species: " + character.species
@@ -27,32 +33,27 @@ final class CharacterHeaderView: UIView {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .red
+        imageView.tintColor = .systemGray
+        imageView.layer.cornerRadius = 20
+        imageView.layer.masksToBounds = true
         return imageView
-    }()
-    
-    private let nameLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 24)
-        label.numberOfLines = 0
-        return label
     }()
     
     private let genderLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 20)
+        label.font = UIFont.systemFont(ofSize: 22)
         return label
     }()
     
     private let statusLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 20)
+        label.font = UIFont.systemFont(ofSize: 22)
         return label
     }()
     
     private let speciesLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 20)
+        label.font = UIFont.systemFont(ofSize: 22)
         return label
     }()
     
@@ -61,13 +62,13 @@ final class CharacterHeaderView: UIView {
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .vertical
         stack.spacing = 8
+        stack.distribution = .fillEqually
         return stack
     }()
     
     private func configure() {
         addSubview(imageView)
         addSubview(stackView)
-        stackView.addArrangedSubview(nameLabel)
         stackView.addArrangedSubview(genderLabel)
         stackView.addArrangedSubview(statusLabel)
         stackView.addArrangedSubview(speciesLabel)

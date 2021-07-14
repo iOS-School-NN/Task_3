@@ -30,7 +30,7 @@ final class CharacterEpisodesView: UIView {
     private let episodesLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.font = UIFont.boldSystemFont(ofSize: 24)
         label.text = "Episodes:"
         return label
     }()
@@ -54,8 +54,8 @@ final class CharacterEpisodesView: UIView {
             
             stackView.topAnchor.constraint(equalTo: episodesLabel.bottomAnchor, constant: 8),
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            stackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
         ])
     }
 }
