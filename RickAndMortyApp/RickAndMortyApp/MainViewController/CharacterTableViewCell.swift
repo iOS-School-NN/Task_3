@@ -18,16 +18,18 @@ class CharacterTableViewCell: UITableViewCell {
         accessoryType = .disclosureIndicator
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        characterImage.layer.cornerRadius = characterImage.bounds.width / 2
+    }
+    
     func setupName(data: Result) {
         characterName.text = data.name + " id: \(data.id)"
     }
     
-    func setupImage(imageString: String) {
-        let session = URLSession.shared
-        let imageURL = URL(string: imageString)
-        session.dataTask(with: imageURL!) { (data, response, error) in
-            self.characterImage.image = UIImage(data: data!)
-        }
+    func setupImage(imageData: Data?) {
+        guard let imageData = imageData else {return}
+        characterImage.image = UIImage(data: imageData)
     }
  
     override func setSelected(_ selected: Bool, animated: Bool) {

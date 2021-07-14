@@ -52,6 +52,11 @@ class DetailViewController: UIViewController {
         //downloadByGroups()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        characterImage.layer.cornerRadius = characterImage.bounds.height / 2
+    }
+    
     let group = DispatchGroup()
     let queue = DispatchQueue.global(qos: .userInteractive)
     

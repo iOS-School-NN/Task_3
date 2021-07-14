@@ -12,15 +12,18 @@ class CharactersListTableViewController: UITableViewController {
     let session = URLSession.shared
     let decoder = JSONDecoder()
     let startGroup = DispatchGroup()
+    let downloadImageGroup = DispatchGroup()
     
     var charactersArr = [Character]() {
         didSet {
             DispatchQueue.main.async {
-//                self.lock.lock()
-                self.charactersArr[0].results.sort { (one, two) -> Bool in
-                one.id < two.id
-            }
-//                self.lock.unlock()
+                self.lock.lock()
+//                self.charactersArr[0].results.sort { (one, two) -> Bool in
+//                    one.id < two.id
+//                }
+                self.lock.unlock()
+                print("reload table")
+                self.tableView.reloadData()
             }
         }
     }
@@ -44,13 +47,13 @@ class CharactersListTableViewController: UITableViewController {
         
         let characterDetail = self.storyboard?.instantiateViewController(withIdentifier: "Detail") as! DetailViewController
         characterDetail.title = charactersArr[0].results[indexPath.row].name
-        characterDetail.id = indexPath.row + 1
+        characterDetail.id = charactersArr[0].results[indexPath.row].id
         navigationController?.pushViewController(characterDetail, animated: true)
+        
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if charactersArr.count == 0 {return 0}
-        //print(charactersArr[0].results.count)
         return charactersArr[0].results.count
     }
     
@@ -58,31 +61,33 @@ class CharactersListTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CharacterCell", for: indexPath) as! CharacterTableViewCell
         
         if charactersArr.count == 0 { return cell }
-        
         cell.setupName(data: charactersArr[0].results[indexPath.row])
         
         cell.characterImage.image = nil
+        print("create cell \(indexPath.row)")
         
-        if let image = characterImages[indexPath.row] {
-            cell.characterImage.image = UIImage(data: image)
-        }
+        let download = self.downloadPhotos(photoIndex: indexPath)
+        if dict[indexPath.row] != nil {return cell}
+        dict[indexPath.row] = download
+//                if let image = characterImages[indexPath.row] {
+//                    cell.characterImage.image = UIImage(data: image)
+//                }
         return cell
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        print("will display cell \(indexPath.row)")
+        print("will display cell \(indexPath.row)")
         
-        let download = self.downloadPhotos(photoNumber: indexPath.row)
-        download?.resume()
-        dict[indexPath.row] = download
+        
     }
     
     override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
-//        print("did end \(indexPath.row)")
+        if dict[indexPath.row] != nil {
+            dict[indexPath.row]?.cancel()
+            dict[indexPath.row] = nil
+        }
+        print("did end \(indexPath.row)")
     }
-    
-    
     
     // MARK: - Business logic
     
@@ -91,25 +96,25 @@ class CharactersListTableViewController: UITableViewController {
         
         let url = URL(string: "https://rickandmortyapi.com/api/character/?page=1")
         
-//        DispatchQueue.global().sync {
+        //        DispatchQueue.global().sync {
         startGroup.enter()
-            self.session.dataTask(with: url!) { (data, response, error) in
-                print("2")
-                if let data = data {
-                    let charList = try! self.decoder.decode(Character.self, from: data)
-//                    self.lock.lock()
-                    self.charactersArr.append(charList)
-//                    self.lock.unlock()
-                }
-//                self.downloadThreePages()
-                //self.downloadPhotos(startRow: 0, endRow: 19)
-                
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-                self.startGroup.leave()
-            }.resume()
-//        }
+        self.session.dataTask(with: url!) { (data, response, error) in
+            print("2")
+            if let data = data {
+                let charList = try! self.decoder.decode(Character.self, from: data)
+                //                    self.lock.lock()
+                self.charactersArr.append(charList)
+                //                    self.lock.unlock()
+            }
+            //                self.downloadThreePages()
+            //self.downloadPhotos(startRow: 0, endRow: 19)
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+            self.startGroup.leave()
+        }.resume()
+        //        }
         print("3")
     }
     
@@ -124,8 +129,8 @@ class CharactersListTableViewController: UITableViewController {
                 
                 print("add operation \(page)")
                 
-//                sleep(2)
-//                print("sleep")
+                //                sleep(2)
+                //                print("sleep")
                 self.session.dataTask(with: url!) { (data, response, error) in
                     if let data = data {
                         
@@ -133,43 +138,50 @@ class CharactersListTableViewController: UITableViewController {
                         let charList = try! self.decoder.decode(Character.self, from: data)
                         
                         self.charactersArr[0].results.append(contentsOf: charList.results)
-                       
+                        
                     }
                     
                     DispatchQueue.main.async {
-//                        self.lock.lock()
-//                        self.charactersArr[0].results.sort { (one, two) -> Bool in
-//                            one.id < two.id
-//                        }
-//                        self.lock.unlock()
-                        self.tableView.reloadData()
+                                                self.lock.lock()
+                                                self.charactersArr[0].results.sort { (one, two) -> Bool in
+                                                    one.id < two.id
+                                                }
+                                                self.lock.unlock()
+                                                print("reload table")
+                        //                        self.tableView.reloadData()
                     }
                 }.resume()
             }
         }
     }
     
-    func downloadPhotos(photoNumber: Int) -> URLSessionDataTask? {
-        if self.characterImages[photoNumber] != nil { return nil }
-        //        print("4")
-        //        DispatchQueue.global().async {
-        
-        let downloading = self.session.dataTask(with: URL(string: self.charactersArr[0].results[photoNumber].image)!) { (data, response, error) in
-//            sleep(2) // for testing cancel task
-            print("5")
-            print("downloaded photo \(photoNumber)")
+    func downloadPhotos(photoIndex: IndexPath) -> URLSessionDataTask? {
+        if dict[photoIndex.row] != nil { return nil}
+        //        downloadImageGroup.enter()
+        let downloading = self.session.dataTask(with: URL(string: self.charactersArr[0].results[photoIndex.row].image)!) { (data, response, error) in
+            //            sleep(1) // for testing cancel task
+            print("downloaded photo \(photoIndex)")
             if let data = data {
                 
-                self.characterImages[photoNumber] = data
+                self.characterImages[photoIndex.row] = data
+                //                self.downloadImageGroup.leave()
+                
+                print("data \(self.characterImages[photoIndex.row])")
+                DispatchQueue.main.async {
+                    //                print("reloading \(photoIndex)")
+                    guard let cell = self.tableView.cellForRow(at: photoIndex) as? CharacterTableViewCell else { return }
+                    //
+                    cell.setupImage(imageData: self.characterImages[photoIndex.row]!)
+                    //self.tableView.reloadRows(at: [photoIndex], with: .automatic)
+                }
+                
             }
             
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
+            
+            
         }
+        downloading.resume()
         return downloading
-        //        }
     }
-    //                sleep(2)
     
 }
