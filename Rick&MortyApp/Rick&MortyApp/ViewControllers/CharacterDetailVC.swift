@@ -11,19 +11,16 @@ final class CharacterDetailVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureNavigationBar()
         configure()
-        headerView.fill(character)
-        locationView.fill(Location(name: "Citadel of Ricks", type: "Space station"))
-        episodesView.fill([
-            Episode(name: "The Ricklantis Mixup", code: "S03E07", date: "September 10, 2017"),
-            Episode(name: "The Ricklantis Mixup", code: "S03E07", date: "September 10, 2017"),
-            Episode(name: "The Ricklantis Mixup", code: "S03E07", date: "September 10, 2017"),
-            Episode(name: "The Ricklantis Mixup", code: "S03E07", date: "September 10, 2017")
-        ])
+        fillHeaderView()
+        fillLocationView()
+        fillEpisodesView()
     }
     
-    init(character: Character) {
+    init(character: Character, networkService: NetworkService) {
         self.character = character
+        self.networkService = networkService
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -31,14 +28,20 @@ final class CharacterDetailVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private let padding: CGFloat = 8
     private let character: Character
+    private let networkService: NetworkService
+    
+    private let padding: CGFloat = 8
     private let headerView = CharacterHeaderView()
     private let locationView = CharacterLocationView()
     private let episodesView = CharacterEpisodesView()
     
-    private func configure() {
+    private func configureNavigationBar() {
         navigationItem.title = character.name
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    private func configure() {
         view.backgroundColor = .white
         
         view.addSubview(headerView)
@@ -61,5 +64,49 @@ final class CharacterDetailVC: UIViewController {
             episodesView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
             episodesView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: padding)
         ])
+    }
+    
+    private func fillHeaderView() {
+        headerView.fill(character: character)
+        
+        networkService.downloadImage(url: character.imageUrl) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let imageData):
+                DispatchQueue.main.async {
+                    self.headerView.characterImage = UIImage(data: imageData)
+                }
+            case .failure(let error):
+                print(String(describing: error))
+            }
+        }
+    }
+    
+    private func fillLocationView() {
+        networkService.getLocation(url: character.locationUrl) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let location):
+                DispatchQueue.main.async {
+                    self.locationView.fill(location)
+                }
+            case .failure(let error):
+                print(String(describing: error))
+            }
+        }
+    }
+    
+    private func fillEpisodesView() {
+        networkService.getEpisodes(urls: character.episodesUrls) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let episodes):
+                DispatchQueue.main.async {
+                    self.episodesView.fill(episodes)
+                }
+            case .failure(let error):
+                print(String(describing: error))
+            }
+        }
     }
 }
