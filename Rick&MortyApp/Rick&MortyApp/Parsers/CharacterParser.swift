@@ -8,12 +8,15 @@
 import Foundation
 
 struct CharacterParser {
-    static func parseCharactersList(_ data: Data) throws -> [Character] {
+    static func parseCharactersPage(_ data: Data) throws -> (PageInfo, [Character]) {
         let decoder = JSONDecoder()
         do {
-            let charactersListCodable = try decoder.decode(CharactersListCodable.self, from: data)
-            return charactersListCodable.results.map {
-                Character(name: $0.name,
+            let charactersCodable = try decoder.decode(CharactersResultsCodable.self, from: data)
+            
+            let pageInfo = PageInfo(next: charactersCodable.info.next, prev: charactersCodable.info.prev)
+            let characters = charactersCodable.results.map {
+                Character(identifier: $0.id,
+                          name: $0.name,
                           gender: $0.gender,
                           status: $0.status,
                           species: $0.species,
@@ -21,6 +24,7 @@ struct CharacterParser {
                           locationUrl: $0.location.url,
                           episodesUrls: $0.episode)
             }
+            return (pageInfo, characters)
         } catch {
             print(String(describing: error))
             throw ErrorMessage.invalidParsing
@@ -31,7 +35,8 @@ struct CharacterParser {
         let decoder = JSONDecoder()
         do {
             let episodeCodable = try decoder.decode(EpisodeCodable.self, from: data)
-            return Episode(name: episodeCodable.name,
+            return Episode(identifier: episodeCodable.id,
+                           name: episodeCodable.name,
                            code: episodeCodable.episode,
                            date: episodeCodable.date)
         } catch {
@@ -65,6 +70,7 @@ private struct CharacterLocationCodable: Codable {
 }
 
 private struct CharacterCodable: Codable {
+    let id: Int
     let name: String
     let status: String
     let species: String
@@ -75,17 +81,19 @@ private struct CharacterCodable: Codable {
     let episode: [String]
 }
 
-private struct CharactersListCodable: Codable {
+private struct CharactersResultsCodable: Codable {
     let info: InfoCodable
     let results: [CharacterCodable]
 }
 
 private struct EpisodeCodable: Codable {
+    let id: Int
     let name: String
     let date: String
     let episode: String
     
     enum CodingKeys: String, CodingKey {
+        case id
         case name
         case date = "air_date"
         case episode
