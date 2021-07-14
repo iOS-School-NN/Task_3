@@ -15,12 +15,14 @@ enum ErrorMessage: Error {
 }
 
 struct NetworkPerformer {
-    static func performRequest(url: String, completion: @escaping (Result<Data, ErrorMessage>) -> Void) {
+    let session = URLSession.shared
+    
+    func performRequest(url: String, completion: @escaping (Result<Data, ErrorMessage>) -> Void) {
         guard let url = URL(string: url) else {
             completion(.failure(.invalidURL))
             return
         }
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        session.dataTask(with: url) { data, response, error in
             guard error == nil else {
                 completion(.failure(.invalidData))
                 return
