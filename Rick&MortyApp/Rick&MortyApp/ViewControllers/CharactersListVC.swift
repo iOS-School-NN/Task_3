@@ -64,7 +64,7 @@ final class CharactersListVC: UIViewController {
         isPaginating = true
         loaderView.isShown = true
         
-        networkHandler.getCharactersPage(url: nextPageUrl) { [weak self] result in
+        networkHandler.getCharacterPages(url: nextPageUrl, pageCount: 3) { [weak self] result in
             guard let self = self else { return }
             guard let characterPage = result else {
                 self.loaderView.isShown = false

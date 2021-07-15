@@ -14,8 +14,8 @@ class NetworkHandler {
         self.service = service
     }
     
-    func getCharactersPage(url: String, completion: @escaping ((PageInfo, [Character])?) -> Void) {
-        service.getCharactersPage(url: url, completion: {
+    func getCharacterPages(url: String, pageCount: Int = 1, completion: @escaping ((PageInfo, [Character])?) -> Void) {
+        service.getCharacterPages(url: url, pageCount: pageCount, completion: {
             switch $0 {
             case .success(let result):
                 completion(result)

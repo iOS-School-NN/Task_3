@@ -8,7 +8,7 @@
 import Foundation
 
 protocol NetworkService: AnyObject {
-    func getCharactersPage(url: String, completion: @escaping (Result<(PageInfo, [Character]), ErrorMessage>) -> Void)
+    func getCharacterPages(url: String, pageCount: Int, completion: @escaping (Result<(PageInfo, [Character]), ErrorMessage>) -> Void)
     func getEpisodes(urls: [String], completion: @escaping (Result<[Episode], ErrorMessage>) -> Void)
     func getLocation(url: String, completion: @escaping (Result<Location, ErrorMessage>) -> Void)
     func downloadImage(url: String, completion: @escaping (Result<Data, ErrorMessage>) -> Void)
@@ -31,6 +31,38 @@ class NetworkServiceImpl: NetworkService {
             case .failure(let error):
                 completion(.failure(error))
             }
+        }
+    }
+    
+    func getCharacterPages(url: String, pageCount: Int, completion: @escaping (Result<(PageInfo, [Character]), ErrorMessage>) -> Void) {
+        let group = DispatchGroup()
+        let queue = DispatchQueue.global(qos: .background)
+        let currentPage = Int(url.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) ?? 1
+        var characters = [Character]()
+        var pageInfo = PageInfo(next: nil, prev: nil)
+        
+        (currentPage..<currentPage + pageCount).forEach { page in
+            let pageUrl = "https://rickandmortyapi.com/api/character/?page=" + "\(page)"
+            group.enter()
+            queue.async {
+                self.getCharactersPage(url: pageUrl) {
+                    switch $0 {
+                    case .success(let result):
+                        characters.append(contentsOf: result.1)
+                        if page == currentPage + pageCount - 1 {
+                            pageInfo = result.0
+                        }
+                        group.leave()
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                }
+            }
+        }
+        group.notify(queue: queue) {
+            let sortedCharacters = characters.sorted { $0.identifier < $1.identifier }
+            let result = (pageInfo, sortedCharacters)
+            completion(.success(result))
         }
     }
     
