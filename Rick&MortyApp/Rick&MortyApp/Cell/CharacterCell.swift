@@ -9,7 +9,7 @@ import UIKit
 
 final class CharacterCell: UITableViewCell {
     static let cellId = "CharacterCellId"
-    static let cellHeight: CGFloat = 56
+    static let cellHeight: CGFloat = 76
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -56,10 +56,10 @@ final class CharacterCell: UITableViewCell {
         contentView.addSubview(characterImageView)
         contentView.addSubview(nameLabel)
         NSLayoutConstraint.activate([
-            characterImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            characterImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
             characterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
-            characterImageView.heightAnchor.constraint(equalToConstant: 40),
-            characterImageView.widthAnchor.constraint(equalToConstant: 40),
+            characterImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding),
+            characterImageView.widthAnchor.constraint(equalTo: characterImageView.heightAnchor),
             
             nameLabel.centerYAnchor.constraint(equalTo: characterImageView.centerYAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: characterImageView.trailingAnchor, constant: padding),
