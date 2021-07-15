@@ -14,7 +14,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         window?.windowScene = scene
-        window?.rootViewController = UINavigationController(rootViewController: CharactersListVC())
         window?.makeKeyAndVisible()
+        
+        let networkService = NetworkServiceImpl()
+        let characterListVC = CharactersListVC(networkService: networkService)
+        window?.rootViewController = UINavigationController(rootViewController: characterListVC)
     }
 }

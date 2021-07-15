@@ -7,7 +7,14 @@
 
 import Foundation
 
-class NetworkService {
+protocol NetworkService: AnyObject {
+    func getCharactersPage(url: String, completion: @escaping (Result<(PageInfo, [Character]), ErrorMessage>) -> Void)
+    func getEpisodes(urls: [String], completion: @escaping (Result<[Episode], ErrorMessage>) -> Void)
+    func getLocation(url: String, completion: @escaping (Result<Location, ErrorMessage>) -> Void)
+    func downloadImage(url: String, completion: @escaping (Result<Data, ErrorMessage>) -> Void)
+}
+
+class NetworkServiceImpl: NetworkService {
     private let performer = NetworkPerformer()
     private var imageCache = NSCache<NSString, AnyObject>()
     

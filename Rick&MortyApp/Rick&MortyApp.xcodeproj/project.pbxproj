@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1134752726A023EF005DCB6C /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1134752626A023EF005DCB6C /* NetworkHandler.swift */; };
 		115129A0269C2FF100090E6D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1151299F269C2FF100090E6D /* AppDelegate.swift */; };
 		115129A2269C2FF100090E6D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115129A1269C2FF100090E6D /* SceneDelegate.swift */; };
 		115129A4269C2FF100090E6D /* CharactersListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115129A3269C2FF100090E6D /* CharactersListVC.swift */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1134752626A023EF005DCB6C /* NetworkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
 		1151299C269C2FF100090E6D /* Rick&MortyApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rick&MortyApp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1151299F269C2FF100090E6D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		115129A1269C2FF100090E6D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 			children = (
 				11C8D216269D77D200E6F0EE /* NetworkService.swift */,
 				11C8D21A269DBEBB00E6F0EE /* NetworkPerformer.swift */,
+				1134752626A023EF005DCB6C /* NetworkHandler.swift */,
 			);
 			path = NetworkService;
 			sourceTree = "<group>";
@@ -300,6 +303,7 @@
 				117CB2AA269F542600C89D5E /* Models.swift in Sources */,
 				11C8D217269D77D200E6F0EE /* NetworkService.swift in Sources */,
 				115129CA269CAC8800090E6D /* CharacterLocationView.swift in Sources */,
+				1134752726A023EF005DCB6C /* NetworkHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

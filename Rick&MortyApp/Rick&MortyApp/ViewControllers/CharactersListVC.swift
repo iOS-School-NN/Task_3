@@ -15,10 +15,23 @@ final class CharactersListVC: UIViewController {
         fetchData()
     }
     
-    private let networkService = NetworkService()
+    init(networkService: NetworkService) {
+        self.networkService = networkService
+        self.networkHandler = NetworkHandler(service: networkService)
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private let networkService: NetworkService
+    private let networkHandler: NetworkHandler
     private var data = [Character]()
     private var isPaginating = false
     private var nextPageUrl = "https://rickandmortyapi.com/api/character/"
+    
+    private let loaderView = LoaderView()
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero)
@@ -28,18 +41,6 @@ final class CharactersListVC: UIViewController {
         tableView.delegate = self
         return tableView
     }()
-    
-    private let loaderView = LoaderView()
-    
-//    private lazy var loaderView: UIStackView = {
-//        let stack = UIStackView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 200))
-//        let spinner = UIActivityIndicatorView()
-//        spinner.backgroundColor = .white
-//        spinner.startAnimating()
-//        stack.addArrangedSubview(spinner)
-//        stack.translatesAutoresizingMaskIntoConstraints = false
-//        return stack
-//    }()
     
     private func configure() {
         navigationItem.title = "Characters list"
@@ -63,20 +64,21 @@ final class CharactersListVC: UIViewController {
         isPaginating = true
         loaderView.isShown = true
         
-        networkService.getCharactersPage(url: nextPageUrl) { [weak self] result in
+        networkHandler.getCharactersPage(url: nextPageUrl) { [weak self] result in
             guard let self = self else { return }
-            switch result {
-            case .success(let characterPage):
-                self.data.append(contentsOf: characterPage.1)
-                self.nextPageUrl = characterPage.0.next ?? ""
-                
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    self.isPaginating = false
-                    self.loaderView.isShown = false
-                }
-            case .failure(let error):
-                print(String(describing: error))
+            guard let characterPage = result else {
+                self.loaderView.isShown = false
+                self.isPaginating = false
+                return
+            }
+            
+            self.data.append(contentsOf: characterPage.1)
+            self.nextPageUrl = characterPage.0.next ?? ""
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.loaderView.isShown = false
+                self.isPaginating = false
             }
         }
     }
@@ -89,21 +91,18 @@ extension CharactersListVC: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CharacterCell.cellId, for: indexPath)
-        guard let characteCell = cell as? CharacterCell else { assertionFailure(); return cell }
+        guard let characterCell = cell as? CharacterCell else { assertionFailure(); return cell }
         let character = data[indexPath.row]
         
-        characteCell.fill(name: character.name)
-        networkService.downloadImage(url: character.imageUrl) {
-            switch $0 {
-            case .success(let imageData):
-                DispatchQueue.main.async {
-                    characteCell.characterImage = UIImage(data: imageData)
-                }
-            case .failure(let error):
-                print(String(describing: error))
+        characterCell.fill(name: character.name)
+
+        networkHandler.getImage(url: character.imageUrl, completion: { image in
+            guard let image = image else { return }
+            DispatchQueue.main.async {
+                characterCell.characterImage = image
             }
-        }
-        return characteCell
+        })
+        return characterCell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

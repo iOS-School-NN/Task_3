@@ -13,6 +13,7 @@ final class CharacterDetailVC: UIViewController {
         super.viewDidLoad()
         configureNavigationBar()
         configure()
+        
         fillHeaderView()
         fillLocationView()
         fillEpisodesView()
@@ -20,7 +21,7 @@ final class CharacterDetailVC: UIViewController {
     
     init(character: Character, networkService: NetworkService) {
         self.character = character
-        self.networkService = networkService
+        self.networkHandler = NetworkHandler(service: networkService)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -29,7 +30,7 @@ final class CharacterDetailVC: UIViewController {
     }
     
     private let character: Character
-    private let networkService: NetworkService
+    private let networkHandler: NetworkHandler
     
     private let padding: CGFloat = 8
     private let headerView = CharacterHeaderView()
@@ -54,59 +55,45 @@ final class CharacterDetailVC: UIViewController {
         NSLayoutConstraint.activate([
             headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: padding),
             headerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
-            headerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: padding),
+            headerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
             
             locationView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: padding * 2),
             locationView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
-            locationView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: padding),
+            locationView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
             
             episodesView.topAnchor.constraint(equalTo: locationView.bottomAnchor, constant: padding * 2),
             episodesView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
-            episodesView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: padding)
+            episodesView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
+            episodesView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
     
     private func fillHeaderView() {
         headerView.fill(character: character)
         
-        networkService.downloadImage(url: character.imageUrl) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let imageData):
-                DispatchQueue.main.async {
-                    self.headerView.characterImage = UIImage(data: imageData)
-                }
-            case .failure(let error):
-                print(String(describing: error))
+        networkHandler.getImage(url: character.imageUrl, completion: { [weak self] image in
+            guard let image = image else { return }
+            DispatchQueue.main.async {
+                self?.headerView.characterImage = image
             }
-        }
+        })
     }
     
     private func fillLocationView() {
-        networkService.getLocation(url: character.locationUrl) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let location):
-                DispatchQueue.main.async {
-                    self.locationView.fill(location)
-                }
-            case .failure(let error):
-                print(String(describing: error))
+        networkHandler.getLocation(url: character.locationUrl) { [weak self] location in
+            guard let location = location else { return }
+            DispatchQueue.main.async {
+                self?.locationView.fill(location)
             }
         }
     }
     
     private func fillEpisodesView() {
-        networkService.getEpisodes(urls: character.episodesUrls) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let episodes):
-                DispatchQueue.main.async {
-                    self.episodesView.fill(episodes)
-                }
-            case .failure(let error):
-                print(String(describing: error))
+        networkHandler.getEpisodes(urls: character.episodesUrls, completion: { [weak self] episodes in
+            guard let episodes = episodes else { return }
+            DispatchQueue.main.async {
+                self?.episodesView.fill(episodes)
             }
-        }
+        })
     }
 }
