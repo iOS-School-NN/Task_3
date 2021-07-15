@@ -16,12 +16,16 @@ class CharactersListTableViewController: UITableViewController {
     
     var charactersArr = [Character]() {
         didSet {
-            DispatchQueue.main.async {
-                self.lock.lock()
+//            DispatchQueue.main.async {
+//                self.lock.lock()
 //                self.charactersArr[0].results.sort { (one, two) -> Bool in
 //                    one.id < two.id
 //                }
-                self.lock.unlock()
+//                print("sort")
+//                self.lock.unlock()
+//            }
+//            startGroup.notify(queue: DispatchQueue.main) {
+            DispatchQueue.main.async {
                 print("reload table")
                 self.tableView.reloadData()
             }
@@ -35,7 +39,10 @@ class CharactersListTableViewController: UITableViewController {
         
         downloadFirstPage()
         
-        startGroup.notify(queue: DispatchQueue.main) {
+        startGroup.notify(queue: DispatchQueue.global()) {
+            print("start notify")
+//            sleep(5)
+            print("contine notify")
             self.downloadThreePages()
         }
     }
@@ -67,26 +74,26 @@ class CharactersListTableViewController: UITableViewController {
         print("create cell \(indexPath.row)")
         
         let download = self.downloadPhotos(photoIndex: indexPath)
+        cell.setupImage(imageData: self.characterImages[indexPath.row])
         if dict[indexPath.row] != nil {return cell}
         dict[indexPath.row] = download
-//                if let image = characterImages[indexPath.row] {
-//                    cell.characterImage.image = UIImage(data: image)
-//                }
+        //                if let image = characterImages[indexPath.row] {
+        //                    cell.characterImage.image = UIImage(data: image)
+        //                }
         return cell
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        print("will display cell \(indexPath.row)")
-        
-        
+        //        print("will display cell \(indexPath.row)")
     }
     
     override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if dict[indexPath.row] != nil {
             dict[indexPath.row]?.cancel()
+            if characterImages[indexPath.row] != nil { return }
             dict[indexPath.row] = nil
         }
-        print("did end \(indexPath.row)")
+        //        print("did end \(indexPath.row)")
     }
     
     // MARK: - Business logic
@@ -96,7 +103,6 @@ class CharactersListTableViewController: UITableViewController {
         
         let url = URL(string: "https://rickandmortyapi.com/api/character/?page=1")
         
-        //        DispatchQueue.global().sync {
         startGroup.enter()
         self.session.dataTask(with: url!) { (data, response, error) in
             print("2")
@@ -109,9 +115,10 @@ class CharactersListTableViewController: UITableViewController {
             //                self.downloadThreePages()
             //self.downloadPhotos(startRow: 0, endRow: 19)
             
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
+//            DispatchQueue.main.async {
+//                print("reload after first page")
+//                self.tableView.reloadData()
+//            }
             self.startGroup.leave()
         }.resume()
         //        }
@@ -122,14 +129,14 @@ class CharactersListTableViewController: UITableViewController {
         let concourentQueue = OperationQueue()
         concourentQueue.maxConcurrentOperationCount = 3
         
-        for page in 2...34 {
+        for page in 2...charactersArr[0].info.pages {
             concourentQueue.addOperation {
                 
                 let url = URL(string: "https://rickandmortyapi.com/api/character/?page=\(page)")
                 
                 print("add operation \(page)")
                 
-                //                sleep(2)
+//                sleep(5)
                 //                print("sleep")
                 self.session.dataTask(with: url!) { (data, response, error) in
                     if let data = data {
@@ -142,12 +149,12 @@ class CharactersListTableViewController: UITableViewController {
                     }
                     
                     DispatchQueue.main.async {
-                                                self.lock.lock()
-                                                self.charactersArr[0].results.sort { (one, two) -> Bool in
-                                                    one.id < two.id
-                                                }
-                                                self.lock.unlock()
-                                                print("reload table")
+                        self.lock.lock()
+                        self.charactersArr[0].results.sort { (one, two) -> Bool in
+                            one.id < two.id
+                        }
+                        self.lock.unlock()
+                        //                        print("reload table")
                         //                        self.tableView.reloadData()
                     }
                 }.resume()
@@ -168,17 +175,15 @@ class CharactersListTableViewController: UITableViewController {
                 
                 print("data \(self.characterImages[photoIndex.row])")
                 DispatchQueue.main.async {
-                    //                print("reloading \(photoIndex)")
+//                self.tableView.reloadData()
+//                    //                print("reloading \(photoIndex)")
                     guard let cell = self.tableView.cellForRow(at: photoIndex) as? CharacterTableViewCell else { return }
                     //
                     cell.setupImage(imageData: self.characterImages[photoIndex.row]!)
-                    //self.tableView.reloadRows(at: [photoIndex], with: .automatic)
+//                    self.tableView.reloadRows(at: [photoIndex], with: .automatic)
                 }
                 
             }
-            
-            
-            
         }
         downloading.resume()
         return downloading

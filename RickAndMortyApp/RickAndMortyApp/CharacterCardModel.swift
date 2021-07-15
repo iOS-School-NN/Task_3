@@ -8,6 +8,7 @@
 import Foundation
 
 struct Character: Codable {
+    var info: Info
     var results: [Result]
 }
 
@@ -15,4 +16,8 @@ struct Result: Codable {
     let id: Int
     let name: String
     let image: String
+}
+
+struct Info: Codable {
+    let pages: Int
 }
