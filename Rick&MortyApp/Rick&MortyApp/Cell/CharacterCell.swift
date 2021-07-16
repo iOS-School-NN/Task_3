@@ -26,15 +26,15 @@ final class CharacterCell: UITableViewCell {
         }
     }
     
-    func fill(name: String) {
-        characterImageView.image = UIImage(systemName: "person")
+    func fill(name: String, imageUrl: URL?) {
+        characterImageView.loadImage(from: imageUrl)
         nameLabel.text = name
     }
     
     private let padding: CGFloat = 8
     
-    private let characterImageView: UIImageView = {
-        let imageView = UIImageView()
+    private let characterImageView: CustomImageView = {
+        let imageView = CustomImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.tintColor = .systemGray
         imageView.layer.cornerRadius = 5

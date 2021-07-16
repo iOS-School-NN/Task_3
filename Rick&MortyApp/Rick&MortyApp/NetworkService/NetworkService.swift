@@ -11,12 +11,10 @@ protocol NetworkService: AnyObject {
     func getCharacterPages(url: String, pageCount: Int, completion: @escaping (Result<(PageInfo, [Character]), ErrorMessage>) -> Void)
     func getEpisodes(urls: [String], completion: @escaping (Result<[Episode], ErrorMessage>) -> Void)
     func getLocation(url: String, completion: @escaping (Result<Location, ErrorMessage>) -> Void)
-    func downloadImage(url: String, completion: @escaping (Result<Data, ErrorMessage>) -> Void)
 }
 
 class NetworkServiceImpl: NetworkService {
     private let performer = NetworkPerformer()
-    private var imageCache = NSCache<NSString, AnyObject>()
     
     func getCharactersPage(url: String, completion: @escaping (Result<(PageInfo, [Character]), ErrorMessage>) -> Void) {
         performer.performRequest(url: url) {
@@ -116,27 +114,6 @@ class NetworkServiceImpl: NetworkService {
                 } catch {
                     completion(.failure(.invalidParsing))
                 }
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    func downloadImage(url: String, completion: @escaping (Result<Data, ErrorMessage>) -> Void) {
-        guard let imageUrl = URL(string: url) else {
-            completion(.failure(.invalidURL))
-            return
-        }
-        
-        if let imageData = imageCache.object(forKey: imageUrl.absoluteString as NSString) as? Data {
-            completion(.success(imageData))
-            return
-        }
-        
-        performer.performRequest(url: url) {
-            switch $0 {
-            case .success(let imageData):
-                completion(.success(imageData))
             case .failure(let error):
                 completion(.failure(error))
             }

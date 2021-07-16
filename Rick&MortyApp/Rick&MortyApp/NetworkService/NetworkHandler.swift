@@ -49,17 +49,4 @@ class NetworkHandler {
             }
         }
     }
-    
-    func getImage(url: String, completion: @escaping (UIImage?) -> Void) {
-        service.downloadImage(url: url) {
-            switch $0 {
-            case .success(let imageData):
-                let image = UIImage(data: imageData)
-                completion(image)
-            case .failure(let error):
-                print(error)
-                completion(nil)
-            }
-        }
-    }
 }

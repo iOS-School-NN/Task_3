@@ -70,13 +70,6 @@ final class CharacterDetailVC: UIViewController {
     
     private func fillHeaderView() {
         headerView.fill(character: character)
-        
-        networkHandler.getImage(url: character.imageUrl, completion: { [weak self] image in
-            guard let image = image else { return }
-            DispatchQueue.main.async {
-                self?.headerView.characterImage = image
-            }
-        })
     }
     
     private func fillLocationView() {

@@ -24,14 +24,14 @@ final class CharacterHeaderView: UIView {
     }
     
     func fill(character: Character) {
-        imageView.image = UIImage(systemName: "person")
+        imageView.loadImage(from: URL(string: character.imageUrl))
         genderLabel.text = "Gender: " + character.gender
         statusLabel.text = "Status: " + character.status
         speciesLabel.text = "Species: " + character.species
     }
     
-    private let imageView: UIImageView = {
-        let imageView = UIImageView()
+    private let imageView: CustomImageView = {
+        let imageView = CustomImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.tintColor = .systemGray
         imageView.layer.cornerRadius = 20

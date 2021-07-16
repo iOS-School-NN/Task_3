@@ -67,7 +67,9 @@ final class CharactersListVC: UIViewController {
         networkHandler.getCharacterPages(url: nextPageUrl, pageCount: 3) { [weak self] result in
             guard let self = self else { return }
             guard let characterPage = result else {
-                self.loaderView.isShown = false
+                DispatchQueue.main.async {
+                    self.loaderView.isShown = false
+                }
                 self.isPaginating = false
                 return
             }
@@ -94,14 +96,7 @@ extension CharactersListVC: UITableViewDataSource, UITableViewDelegate {
         guard let characterCell = cell as? CharacterCell else { assertionFailure(); return cell }
         let character = data[indexPath.row]
         
-        characterCell.fill(name: character.name)
-
-        networkHandler.getImage(url: character.imageUrl, completion: { image in
-            guard let image = image else { return }
-            DispatchQueue.main.async {
-                characterCell.characterImage = image
-            }
-        })
+        characterCell.fill(name: character.name, imageUrl: URL(string: character.imageUrl))
         return characterCell
     }
     
