@@ -23,6 +23,8 @@ class DetailViewController: UIViewController {
     
     ///Location
     
+    @IBOutlet weak var locationTitle: UILabel!
+    
     @IBOutlet weak var locationName: UILabel!
     
     @IBOutlet weak var locationType: UILabel!
@@ -31,25 +33,28 @@ class DetailViewController: UIViewController {
     
     @IBOutlet weak var episodes: UITextView!
     
-    let session = URLSession.shared
-    let decoder = JSONDecoder()
     var detailData: CharacterDetailModel? {
         didSet {
-            downloadByGroups()
+            guard let detailData = detailData else { return }
+            dataSourse.downloadByGroups(data: detailData)
         }
     }
+    
     var id = 1
     var imageData: Data?
     var locationData: LocationStruct?
     var episodesFromNetwork = [Episode]()
     
+    var dataSourse = DetailBusinessModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        cleanUI()
+        dataSourse.delegate = self
+        
         indicator.startAnimating()
         
-        downloadCharacretDetail(characterIndex: self.id)
-        
-        //downloadByGroups()
+        dataSourse.downloadCharacretDetail(characterIndex: id)
     }
     
     override func viewDidLayoutSubviews() {
@@ -57,81 +62,16 @@ class DetailViewController: UIViewController {
         characterImage.layer.cornerRadius = characterImage.bounds.height / 2
     }
     
-    let group = DispatchGroup()
-    let queue = DispatchQueue.global(qos: .userInteractive)
-    
-    func downloadByGroups() {
-        
-        print("start group")
-        self.downloadPhoto()
-        self.downloadLocation()
-        self.downloadEpisodes()
-        
-        group.notify(queue: DispatchQueue.main) {
-            self.setupUI()
-            print("updated")
-        }
-    }
-    
-    func downloadCharacretDetail(characterIndex: Int) {
-        let url = URL(string: "https://rickandmortyapi.com/api/character/\(characterIndex)")
-        
-        self.session.dataTask(with: url!) { (data, response, error) in
-            print("start download card")
-            if let data = data {
-                print("downloading card")
-                let characterData = try! self.decoder.decode(CharacterDetailModel.self, from: data)
-                self.detailData = characterData
-            }
-            //self.downloadPhoto()
-            //            sleep(2) //for testing
-        }.resume()
-    }
-    
-    func downloadPhoto() {
-        print("downloading photo in")
-        guard let data = detailData else { return }
-        group.enter()
-        self.session.dataTask(with: URL(string: data.image)!) { (data, response, error) in
-            print("start download photo")
-            if let data = data {
-                self.imageData = data
-            }
-            //            self.downloadLocation()
-            self.group.leave()
-        }.resume()
-    }
-    
-    func downloadLocation() {
-        guard let data = detailData else { return }
-        
-        let url = URL(string: data.location.url)
-        group.enter()
-        self.session.dataTask(with: url!) { (data, response, error) in
-            if let data = data {
-                let locationData = try! self.decoder.decode(LocationStruct.self, from: data)
-                self.locationData = locationData
-            }
-            self.group.leave()
-            //            self.downloadEpisodes()
-        }.resume()
-    }
-    
-    func downloadEpisodes() {
-        guard let data = detailData else { return }
-
-        for episode in data.episode {
-            let url = URL(string: episode)
-            group.enter()
-            self.session.dataTask(with: url!) { (data, response, error) in
-                if let data = data {
-                    let episodeData = try! self.decoder.decode(Episode.self, from: data)
-                    self.episodesFromNetwork.append(episodeData)
-                }
-                print("finish downloadind episode")
-                self.group.leave()
-            }.resume()
-        }
+    func cleanUI() {
+        let nothing = ""
+        characterName.text = nothing
+        characterGender.text = nothing
+        characterStatus.text = nothing
+        characterSpecies.text = nothing
+        locationTitle.text = nothing
+        locationName.text = nothing
+        locationType.text = nothing
+        episodes.text = nothing
     }
     
     func setupUI() {
@@ -142,6 +82,7 @@ class DetailViewController: UIViewController {
         characterStatus.text = data.status
         characterSpecies.text = data.species
         characterImage.image = UIImage(data: imageData!)
+        locationTitle.text = "Location:"
         locationName.text = location.name
         locationType.text = location.type
         for episode in episodesFromNetwork {
@@ -149,13 +90,29 @@ class DetailViewController: UIViewController {
         }
         indicator.stopAnimating()
     }
+}
+
+extension DetailViewController: DetailBusinessModelDelegate {
     
-    func updateUI() {
-        print("start update")
-        DispatchQueue.main.async {
-            print("start setup")
-            self.setupUI()
-        }
+    func allDataIsReady() {
+        setupUI()
     }
+    
+    func sendPhoto(photo: Data) {
+        imageData = photo
+    }
+    
+    func sendLocation(location: LocationStruct) {
+        locationData = location
+    }
+    
+    func sendEpisodes(episode: Episode) {
+        episodesFromNetwork.append(episode)
+    }
+    
+    func receiveData(characterData: CharacterDetailModel) {
+        detailData = characterData
+    }
+    
 }
 

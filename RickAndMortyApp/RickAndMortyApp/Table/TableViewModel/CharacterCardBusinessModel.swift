@@ -10,7 +10,7 @@ import Foundation
 protocol CharacterCardBusinessModelDelegate: AnyObject {
     func createCharacterArray(characterArray: Character)
     func updateCharacterArray(character: [Result])
-    func recivePhoto(indexPath: IndexPath, photoData: Data)
+    func receivePhoto(indexPath: IndexPath, photoData: Data)
     func sortArray()
 }
 
@@ -20,7 +20,7 @@ class CharacterCardBusinessModel {
     let startGroup = DispatchGroup()
     let session = URLSession.shared
     let decoder = JSONDecoder()
-    var pagesCount = 1
+    var pagesCount = 2
     var fetchImageList = [Int: URLSessionDataTask]()
     
     func download() {
@@ -41,7 +41,6 @@ class CharacterCardBusinessModel {
             print("2")
             if let data = data {
                 let charList = try! self.decoder.decode(Character.self, from: data)
-                //                self.charactersArr.append(charList)
                 self.delegate?.createCharacterArray(characterArray: charList)
                 self.pagesCount = charList.info.pages
             }
@@ -60,7 +59,7 @@ class CharacterCardBusinessModel {
                 let url = URL(string: "https://rickandmortyapi.com/api/character/?page=\(page)")
                 
                 print("add operation \(page)")
-                //                sleep(5)
+//                                sleep(5)
                 //                print("sleep")
                 self.session.dataTask(with: url!) { (data, response, error) in
                     if let data = data {
@@ -74,20 +73,18 @@ class CharacterCardBusinessModel {
         }
     }
     
-    func downloadPhotos(photoIndex: IndexPath, photoString: String) -> URLSessionDataTask? {
-        if fetchImageList[photoIndex.row] != nil { return nil}
+    func downloadPhotos(photoIndex: IndexPath, photoString: String) {
+        if fetchImageList[photoIndex.row] != nil { return }
         
         let downloading = session.dataTask(with: URL(string: photoString)!) { (data, response, error) in
-            print("downloading \(Thread.current)")
             print("downloaded photo \(photoIndex)")
             if let data = data {
-                self.delegate?.recivePhoto(indexPath: photoIndex, photoData: data)
+                self.delegate?.receivePhoto(indexPath: photoIndex, photoData: data)
             }
         }
         downloading.resume()
         
         fetchImageList[photoIndex.row] = downloading
-        return downloading
     }
     
     func cancelDownloadPhoto(row: Int) {

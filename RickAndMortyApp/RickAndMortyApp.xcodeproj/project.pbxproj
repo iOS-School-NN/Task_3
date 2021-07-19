@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		222C767A26A06F1200FF692E /* DetailBusinessModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222C767926A06F1200FF692E /* DetailBusinessModel.swift */; };
 		224A587B269D5CB900C6C922 /* CharacterDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224A587A269D5CB900C6C922 /* CharacterDetailModel.swift */; };
 		224A587E269D5E9200C6C922 /* LocationStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224A587D269D5E9200C6C922 /* LocationStruct.swift */; };
 		224A5881269D5F9B00C6C922 /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224A5880269D5F9B00C6C922 /* Episode.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		222C767926A06F1200FF692E /* DetailBusinessModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailBusinessModel.swift; sourceTree = "<group>"; };
 		224A587A269D5CB900C6C922 /* CharacterDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailModel.swift; sourceTree = "<group>"; };
 		224A587D269D5E9200C6C922 /* LocationStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationStruct.swift; sourceTree = "<group>"; };
 		224A5880269D5F9B00C6C922 /* Episode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Episode.swift; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 				224A587A269D5CB900C6C922 /* CharacterDetailModel.swift */,
 				224A587D269D5E9200C6C922 /* LocationStruct.swift */,
 				224A5880269D5F9B00C6C922 /* Episode.swift */,
+				222C767926A06F1200FF692E /* DetailBusinessModel.swift */,
 			);
 			path = DetailViewModel;
 			sourceTree = "<group>";
@@ -233,6 +236,7 @@
 				22F0688626996749007E7E8D /* AppDelegate.swift in Sources */,
 				22F0688826996749007E7E8D /* SceneDelegate.swift in Sources */,
 				224A587E269D5E9200C6C922 /* LocationStruct.swift in Sources */,
+				222C767A26A06F1200FF692E /* DetailBusinessModel.swift in Sources */,
 				224A589A269D75D800C6C922 /* DetailViewController.swift in Sources */,
 				22F068A126997EFE007E7E8D /* CharacterTableViewCell.swift in Sources */,
 				224A587B269D5CB900C6C922 /* CharacterDetailModel.swift in Sources */,

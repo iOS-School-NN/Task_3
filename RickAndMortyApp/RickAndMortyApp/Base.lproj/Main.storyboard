@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Root View Controller-->
+        <!--Characters list-->
         <scene sceneID="Xbr-94-FmX">
             <objects>
                 <tableViewController id="GzU-21-wfp" customClass="CharactersListTableViewController" customModule="RickAndMortyApp" customModuleProvider="target" sceneMemberID="viewController">
@@ -57,7 +57,7 @@
                             <outlet property="delegate" destination="GzU-21-wfp" id="zmQ-DD-ivK"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="dLI-ia-MLM"/>
+                    <navigationItem key="navigationItem" title="Characters list" id="dLI-ia-MLM"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lA4-ry-vDi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -72,34 +72,35 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mba-Co-CT7">
-                                <rect key="frame" x="10" y="90" width="168" height="168"/>
+                                <rect key="frame" x="10" y="90" width="170" height="170"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="mba-Co-CT7" secondAttribute="height" multiplier="1:1" id="KFL-Kr-0dJ"/>
+                                    <constraint firstAttribute="width" constant="170" id="RNy-gm-CAq"/>
                                 </constraints>
                             </imageView>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="29" translatesAutoresizingMaskIntoConstraints="NO" id="Usn-Db-d04">
-                                <rect key="frame" x="208" y="90" width="196" height="169"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="Usn-Db-d04">
+                                <rect key="frame" x="200" y="90" width="204" height="178"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9aG-Mh-Fkg">
-                                        <rect key="frame" x="0.0" y="0.0" width="196" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="204" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gender" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z86-tq-OPt">
-                                        <rect key="frame" x="0.0" y="49.5" width="196" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="52.5" width="204" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fMu-Cn-v1n">
-                                        <rect key="frame" x="0.0" y="99" width="196" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="105" width="204" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Species" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UJV-hF-Tng">
-                                        <rect key="frame" x="0.0" y="148.5" width="196" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="157.5" width="204" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -145,18 +146,17 @@
                         <constraints>
                             <constraint firstItem="mba-Co-CT7" firstAttribute="top" secondItem="xOZ-H6-SzN" secondAttribute="top" constant="90" id="0pd-Q9-nsk"/>
                             <constraint firstItem="xOZ-H6-SzN" firstAttribute="trailing" secondItem="Usn-Db-d04" secondAttribute="trailing" constant="10" id="2Y0-mb-6GO"/>
-                            <constraint firstItem="Usn-Db-d04" firstAttribute="leading" secondItem="mba-Co-CT7" secondAttribute="trailing" constant="30" id="2eb-Bw-ZzK"/>
-                            <constraint firstItem="xOZ-H6-SzN" firstAttribute="bottom" secondItem="mba-Co-CT7" secondAttribute="bottom" constant="550" id="68B-fp-Al3"/>
                             <constraint firstItem="xOZ-H6-SzN" firstAttribute="trailing" secondItem="bym-UV-Fmz" secondAttribute="trailing" constant="10" id="6ij-NP-m4a"/>
                             <constraint firstItem="Wfh-rG-Va9" firstAttribute="centerY" secondItem="2Ks-mC-JbT" secondAttribute="centerY" id="Iya-BB-bct"/>
                             <constraint firstItem="mba-Co-CT7" firstAttribute="leading" secondItem="xOZ-H6-SzN" secondAttribute="leading" constant="10" id="PpP-ei-E8P"/>
                             <constraint firstItem="bym-UV-Fmz" firstAttribute="leading" secondItem="xOZ-H6-SzN" secondAttribute="leading" constant="10" id="Q2B-S4-aF8"/>
+                            <constraint firstItem="Usn-Db-d04" firstAttribute="leading" secondItem="mba-Co-CT7" secondAttribute="trailing" constant="20" id="V3v-yn-BYK"/>
                             <constraint firstItem="xOZ-H6-SzN" firstAttribute="trailing" secondItem="jR9-hd-aR9" secondAttribute="trailing" constant="10" id="XUq-aL-h8j"/>
                             <constraint firstItem="bym-UV-Fmz" firstAttribute="top" secondItem="jR9-hd-aR9" secondAttribute="bottom" constant="50" id="fi5-7I-O18"/>
                             <constraint firstItem="xOZ-H6-SzN" firstAttribute="bottom" secondItem="bym-UV-Fmz" secondAttribute="bottom" constant="10" id="geh-nH-LDF"/>
                             <constraint firstItem="Wfh-rG-Va9" firstAttribute="centerX" secondItem="2Ks-mC-JbT" secondAttribute="centerX" id="lez-ek-Zp5"/>
-                            <constraint firstItem="Usn-Db-d04" firstAttribute="top" secondItem="xOZ-H6-SzN" secondAttribute="top" constant="90" id="oEW-Rs-UbB"/>
-                            <constraint firstItem="jR9-hd-aR9" firstAttribute="top" secondItem="Usn-Db-d04" secondAttribute="bottom" constant="59" id="smL-h0-LCT"/>
+                            <constraint firstItem="Usn-Db-d04" firstAttribute="top" secondItem="mba-Co-CT7" secondAttribute="top" id="oEW-Rs-UbB"/>
+                            <constraint firstItem="jR9-hd-aR9" firstAttribute="top" secondItem="Usn-Db-d04" secondAttribute="bottom" constant="50" id="tEV-gw-qcv"/>
                             <constraint firstItem="jR9-hd-aR9" firstAttribute="leading" secondItem="xOZ-H6-SzN" secondAttribute="leading" constant="10" id="wBR-kj-L8I"/>
                         </constraints>
                     </view>
@@ -170,6 +170,7 @@
                         <outlet property="episodes" destination="bym-UV-Fmz" id="Uay-EW-EqO"/>
                         <outlet property="indicator" destination="Wfh-rG-Va9" id="eEi-Ml-Bh7"/>
                         <outlet property="locationName" destination="4Qu-ho-smx" id="snl-c8-HWW"/>
+                        <outlet property="locationTitle" destination="31a-4C-W3X" id="3ng-dd-V1c"/>
                         <outlet property="locationType" destination="DOo-vu-8eF" id="kxa-Pz-ImA"/>
                     </connections>
                 </viewController>
