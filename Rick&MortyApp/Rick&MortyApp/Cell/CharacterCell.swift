@@ -20,12 +20,6 @@ final class CharacterCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var characterImage: UIImage? {
-        didSet {
-            characterImageView.image = characterImage
-        }
-    }
-    
     func fill(name: String, imageUrl: URL?) {
         characterImageView.loadImage(from: imageUrl)
         nameLabel.text = name
@@ -36,7 +30,6 @@ final class CharacterCell: UITableViewCell {
     private let characterImageView: CustomImageView = {
         let imageView = CustomImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.tintColor = .systemGray
         imageView.layer.cornerRadius = 5
         imageView.layer.masksToBounds = true
         return imageView

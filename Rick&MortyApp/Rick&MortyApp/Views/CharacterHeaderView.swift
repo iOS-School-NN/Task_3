@@ -17,12 +17,6 @@ final class CharacterHeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var characterImage: UIImage? {
-        didSet {
-            imageView.image = characterImage
-        }
-    }
-    
     func fill(character: Character) {
         imageView.loadImage(from: URL(string: character.imageUrl))
         genderLabel.text = "Gender: " + character.gender
@@ -33,7 +27,6 @@ final class CharacterHeaderView: UIView {
     private let imageView: CustomImageView = {
         let imageView = CustomImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.tintColor = .systemGray
         imageView.layer.cornerRadius = 20
         imageView.layer.masksToBounds = true
         return imageView
