@@ -61,7 +61,9 @@ class DetailBusinessModel {
     }
     
     func downloadLocation(data: CharacterDetailModel) {
+        if data.location.url == "" { return }
         let url = URL(string: data.location.url)
+        
         group.enter()
         self.session.dataTask(with: url!) { (data, response, error) in
             if let data = data {

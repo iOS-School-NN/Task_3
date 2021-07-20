@@ -131,7 +131,7 @@
                                 </subviews>
                             </stackView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="bym-UV-Fmz">
-                                <rect key="frame" x="10" y="455.5" width="394" height="342.5"/>
+                                <rect key="frame" x="10" y="425.5" width="394" height="372.5"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -152,7 +152,7 @@
                             <constraint firstItem="bym-UV-Fmz" firstAttribute="leading" secondItem="xOZ-H6-SzN" secondAttribute="leading" constant="10" id="Q2B-S4-aF8"/>
                             <constraint firstItem="Usn-Db-d04" firstAttribute="leading" secondItem="mba-Co-CT7" secondAttribute="trailing" constant="20" id="V3v-yn-BYK"/>
                             <constraint firstItem="xOZ-H6-SzN" firstAttribute="trailing" secondItem="jR9-hd-aR9" secondAttribute="trailing" constant="10" id="XUq-aL-h8j"/>
-                            <constraint firstItem="bym-UV-Fmz" firstAttribute="top" secondItem="jR9-hd-aR9" secondAttribute="bottom" constant="50" id="fi5-7I-O18"/>
+                            <constraint firstItem="bym-UV-Fmz" firstAttribute="top" secondItem="jR9-hd-aR9" secondAttribute="bottom" constant="20" id="fi5-7I-O18"/>
                             <constraint firstItem="xOZ-H6-SzN" firstAttribute="bottom" secondItem="bym-UV-Fmz" secondAttribute="bottom" constant="10" id="geh-nH-LDF"/>
                             <constraint firstItem="Wfh-rG-Va9" firstAttribute="centerX" secondItem="2Ks-mC-JbT" secondAttribute="centerX" id="lez-ek-Zp5"/>
                             <constraint firstItem="Usn-Db-d04" firstAttribute="top" secondItem="mba-Co-CT7" secondAttribute="top" id="oEW-Rs-UbB"/>

@@ -76,15 +76,16 @@ class DetailViewController: UIViewController {
     
     func setupUI() {
         guard let data = detailData else { return }
-        guard let location = locationData else { return }
+        let location = locationData
         characterName.text = data.name
         characterGender.text = data.gender
         characterStatus.text = data.status
         characterSpecies.text = data.species
         characterImage.image = UIImage(data: imageData!)
-        locationTitle.text = "Location:"
-        locationName.text = location.name
-        locationType.text = location.type
+        
+        locationName.text = location?.name
+        locationType.text = location?.type
+        if locationName.text != nil {locationTitle.text = "Location:"}
         for episode in episodesFromNetwork {
             episodes.text += "Name: \(episode.name), date: \(episode.air_date), episode: \(episode.episode) \n"
         }
