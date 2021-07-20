@@ -15,7 +15,6 @@ class CharactersListTableViewController: UITableViewController {
     var charactersArr = [Character]() {
         didSet {
             DispatchQueue.main.async {
-                print("reload table")
                 self.tableView.reloadData()
             }
         }
@@ -52,7 +51,6 @@ class CharactersListTableViewController: UITableViewController {
         cell.setupName(data: charactersArr[0].results[indexPath.row])
         
         cell.characterImage.image = nil
-        print("create cell \(indexPath.row)")
         
         dataSourse.downloadPhotos(photoIndex: indexPath, photoString: charactersArr[0].results[indexPath.row].image)
         cell.setupImage(imageData: self.characterImages[indexPath.row])
@@ -63,7 +61,6 @@ class CharactersListTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if characterImages[indexPath.row] != nil { return }
         dataSourse.cancelDownloadPhoto(row: indexPath.row)
-        print("end \(indexPath.row)")
     }
 }
 // MARK: - Business logic
@@ -74,7 +71,6 @@ extension CharactersListTableViewController: CharacterCardBusinessModelDelegate 
         characterImages[indexPath.row] = photoData
         DispatchQueue.main.async {
             guard let cell = self.tableView.cellForRow(at: indexPath) as? CharacterTableViewCell else { return }
-            print("setup image")
             cell.setupImage(imageData: self.characterImages[indexPath.row]!)
         }
     }
@@ -90,13 +86,10 @@ extension CharactersListTableViewController: CharacterCardBusinessModelDelegate 
     func sortArray() {
         DispatchQueue.global().async {
             self.lock.lock()
-//            var arr = self.charactersArr
-            print("sort")
             if self.charactersArr.isEmpty { return }
             self.charactersArr[0].results.sort { (one, two) -> Bool in
                 one.id < two.id
             }
-//            self.charactersArr = arr
             self.lock.unlock()
         }
     }

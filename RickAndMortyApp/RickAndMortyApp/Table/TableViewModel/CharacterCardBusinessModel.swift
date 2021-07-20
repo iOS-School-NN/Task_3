@@ -32,13 +32,10 @@ class CharacterCardBusinessModel {
     }
     
     func downloadFirstPage() {
-        print("1")
-        
         let url = URL(string: "https://rickandmortyapi.com/api/character/?page=1")
         
         startGroup.enter()
         self.session.dataTask(with: url!) { (data, response, error) in
-            print("2")
             if let data = data {
                 let charList = try! self.decoder.decode(Character.self, from: data)
                 self.delegate?.createCharacterArray(characterArray: charList)
@@ -46,7 +43,6 @@ class CharacterCardBusinessModel {
             }
             self.startGroup.leave()
         }.resume()
-        print("3")
     }
     
     func downloadThreePages(pagesCount: Int) {
@@ -57,13 +53,8 @@ class CharacterCardBusinessModel {
             concourentQueue.addOperation {
                 
                 let url = URL(string: "https://rickandmortyapi.com/api/character/?page=\(page)")
-                
-                print("add operation \(page)")
-//                                sleep(5)
-                //                print("sleep")
                 self.session.dataTask(with: url!) { (data, response, error) in
                     if let data = data {
-                        print("execution \(page)")
                         let charList = try! self.decoder.decode(Character.self, from: data)
                         self.delegate?.updateCharacterArray(character: charList.results)
                     }
@@ -77,7 +68,6 @@ class CharacterCardBusinessModel {
         if fetchImageList[photoIndex.row] != nil { return }
         
         let downloading = session.dataTask(with: URL(string: photoString)!) { (data, response, error) in
-            print("downloaded photo \(photoIndex)")
             if let data = data {
                 self.delegate?.receivePhoto(indexPath: photoIndex, photoData: data)
             }

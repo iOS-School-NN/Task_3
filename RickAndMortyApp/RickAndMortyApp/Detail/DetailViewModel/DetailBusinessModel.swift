@@ -26,9 +26,7 @@ class DetailBusinessModel {
         let url = URL(string: "https://rickandmortyapi.com/api/character/\(characterIndex)")
         
         self.session.dataTask(with: url!) { (data, response, error) in
-            print("start download card")
             if let data = data {
-                print("downloading card")
                 let characterData = try! self.decoder.decode(CharacterDetailModel.self, from: data)
                 self.delegate?.receiveData(characterData: characterData)
             }
@@ -37,22 +35,18 @@ class DetailBusinessModel {
     
     func downloadByGroups(data: CharacterDetailModel) {
         
-        print("start group")
         self.downloadPhoto(data: data)
         self.downloadLocation(data: data)
         self.downloadEpisodes(data: data)
         
         group.notify(queue: DispatchQueue.main) {
             self.delegate?.allDataIsReady()
-            print("updated")
         }
     }
     
     func downloadPhoto(data: CharacterDetailModel) {
-        print("downloading photo in")
         group.enter()
         self.session.dataTask(with: URL(string: data.image)!) { (data, response, error) in
-            print("start download photo")
             if let data = data {
                 self.delegate?.sendPhoto(photo: data)
             }
@@ -79,13 +73,10 @@ class DetailBusinessModel {
             let url = URL(string: episode)
             group.enter()
             self.session.dataTask(with: url!) { (data, response, error) in
-                print("thread \(Thread.current)")
                 if let data = data {
                     let episodeData = try! self.decoder.decode(Episode.self, from: data)
                     self.delegate?.sendEpisodes(episode: episodeData)
-                    print(episodeData.air_date.count)
                 }
-                print("finish downloadind episode")
                 self.group.leave()
             }.resume()
         }

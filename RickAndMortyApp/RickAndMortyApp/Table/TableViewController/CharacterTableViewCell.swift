@@ -24,7 +24,7 @@ class CharacterTableViewCell: UITableViewCell {
     }
     
     func setupName(data: Result) {
-        characterName.text = data.name + " id: \(data.id)"
+        characterName.text = data.name
     }
     
     func setupImage(imageData: Data?) {
@@ -34,8 +34,6 @@ class CharacterTableViewCell: UITableViewCell {
  
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
 
 }
