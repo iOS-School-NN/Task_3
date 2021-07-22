@@ -35,7 +35,7 @@ class DataManager {
     }
     
     static func getLocation(location: Location, completion: @escaping(Location?) -> ()) {
-        guard let url = URL(string: location.url) else { return }
+        guard let location = location.url, let url = URL(string: location) else { return }
         
         NetworkingService.shared.getData(url: url) { (json) in
             if let json = json as? [String: Any],
@@ -55,5 +55,4 @@ class DataManager {
             }
         }
     }
-    
 }

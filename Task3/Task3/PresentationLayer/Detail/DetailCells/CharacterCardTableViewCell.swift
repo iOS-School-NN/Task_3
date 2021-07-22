@@ -24,6 +24,8 @@ final class CharacterCardTableViewCell: UITableViewCell {
         genderLabel.text = character.gender
         statusLabel.text = character.status
         typeLabel.text = character.type
-        photoView.set(imageURL: character.image)
+        if let photoUrl = character.image {
+            photoView.set(imageURL: photoUrl)
+        }
     }
 }

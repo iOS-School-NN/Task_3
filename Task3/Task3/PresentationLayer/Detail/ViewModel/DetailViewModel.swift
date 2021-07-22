@@ -28,15 +28,19 @@ final class DetailViewModel {
                 return
             }
             
-            self.dispatchQueue.async {
-                if let location = self.character?.location {
+            if let location = self.character?.location {
+                self.group.enter()
+                self.dispatchQueue.async {
                     self.getLocation(location: location)
                 }
-                
-                self.character?.episode.forEach({
-                    self.getEpisode(url: $0)
-                })
             }
+            
+            self.character?.episode?.forEach({ value in
+                self.group.enter()
+                self.dispatchQueue.async {
+                    self.getEpisode(url: value)
+                }
+            })
             
             self.group.wait()
             
@@ -56,7 +60,6 @@ final class DetailViewModel {
     
     private func getLocation(location: Location, _ completion: (() -> Void)? = nil) {
         print("LOCATION START")
-        group.enter()
         DataManager.getLocation(location: location, completion: { [weak self] resp in
             guard let self = self else {
                 return
@@ -69,7 +72,6 @@ final class DetailViewModel {
     
     private func getEpisode(url: String, _ completion: (() -> Void)? = nil) {
         print("EPISODE START")
-        group.enter()
         DataManager.getEpisode(url: url, completion: { [weak self] resp in
             guard let self = self else {
                 return

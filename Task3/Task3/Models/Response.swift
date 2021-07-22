@@ -11,7 +11,7 @@ import ObjectMapper
 struct Response: Mappable {
     
     var info: Info?
-    var characters: [Character] = []
+    var characters: [Character]?
     
     init?(map: Map) {}
     

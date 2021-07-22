@@ -11,14 +11,14 @@ import ObjectMapper
 struct Character: Mappable {
     
     var id: Int?
-    var name = ""
-    var status = ""
-    var species = ""
-    var type = ""
-    var gender = ""
+    var name: String?
+    var status: String?
+    var species: String?
+    var type: String?
+    var gender: String?
     var location: Location?
-    var image = ""
-    var episode: [String] = []
+    var image: String?
+    var episode: [String]?
 
     init?(map: Map) {}
     

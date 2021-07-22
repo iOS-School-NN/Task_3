@@ -10,10 +10,10 @@ import ObjectMapper
 
 struct Episode: Mappable {
     
-    var date = ""
-    var name = ""
-    var code = ""
-    var url = ""
+    var date: String?
+    var name: String?
+    var code: String?
+    var url: String?
     
     init?(map: Map) {}
     
@@ -28,6 +28,6 @@ struct Episode: Mappable {
 extension Episode {
     
     var episodeString: String {
-        return code + " /" + name  + " /" + date
+        return [code, name, date].compactMap({ $0 }).joined(separator: " / ")
     }
 }

@@ -10,9 +10,9 @@ import ObjectMapper
 
 struct Location: Mappable {
     
-    var name = ""
-    var type = ""
-    var url = ""
+    var name: String?
+    var type: String?
+    var url: String?
 
     init?(map: Map) {}
     

@@ -23,6 +23,8 @@ final class CharacterTableViewCell: UITableViewCell {
     func configure(character: Character) {
         
         nameLabel.text = character.name
-        photoView.set(imageURL: character.image)
+        if let photoUrl = character.image {
+            photoView.set(imageURL: photoUrl)
+        }
     }
 }
