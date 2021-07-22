@@ -25,7 +25,7 @@ class CharacterTableViewCell: UITableViewCell {
     
     func configure(_ item: Result) {
         characterNameLabel.text = item.name
-        characterImageView.loadImageForCustomImageView(by: item.image, onComplete: { [weak self] (data, url) in
+        characterImageView.loadCachedImage(by: item.image, onComplete: { [weak self] (data, url) in
             if(item.image == url) {
                 self?.characterImageView.image = UIImage(data: data)
             }

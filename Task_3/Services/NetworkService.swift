@@ -28,7 +28,7 @@ struct NetworkService {
         return request
     }
 
-    static func performGetRequest(url: String, pageId: Int, onComplete: @escaping (CharacterСardModel, Int) -> Void, onError: @escaping (Error, Int) -> Void) {
+    static func performGetRequestForLoadingPages(url: String, pageId: Int, onComplete: @escaping (CharactersPageModel, Int) -> Void, onError: @escaping (Error, Int) -> Void) {
         
         guard let request = makeGetRequest(urlString: url) else {
             return
@@ -46,7 +46,7 @@ struct NetworkService {
                 onError(ServerError.noDataProvided, pageId)
                 return
             }
-            guard let info = try? JSONDecoder().decode(CharacterСardModel.self, from: data) else {
+            guard let info = try? JSONDecoder().decode(CharactersPageModel.self, from: data) else {
                 NSLog("Could not decode")
                 onError(ServerError.failedToDecode, pageId)
                 return
@@ -61,7 +61,7 @@ struct NetworkService {
         task.resume()
     }
     
-    static func performGetConcurrentRequest(url: String, id: Int, onComplete: @escaping (CharacterСardModel, Int) -> Void, onError: @escaping (Error) -> Void) {
+    static func performGetRequestForLoadingCharacterCard(url: String, onComplete: @escaping (CharacterCardModel) -> Void, onError: @escaping (Error) -> Void) {
         
         guard let request = makeGetRequest(urlString: url) else {
             return
@@ -70,9 +70,6 @@ struct NetworkService {
         
         let session = URLSession.shared
         
-        let defaultGlobal = DispatchQueue.global()
-        //loadCharacterInformation(urlString: "https://rickandmortyapi.com/api/character?page=" + String(i))
-
         let task = session.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 onError(error)
@@ -82,19 +79,84 @@ struct NetworkService {
                 onError(ServerError.noDataProvided)
                 return
             }
-            guard let info = try? JSONDecoder().decode(CharacterСardModel.self, from: data) else {
+            guard let info = try? JSONDecoder().decode(CharacterCardModel.self, from: data) else {
                 NSLog("Could not decode")
                 onError(ServerError.failedToDecode)
                 return
             }
             
-            defaultGlobal.async {
-                onComplete(info, id)
+            DispatchQueue.main.async {
+                onComplete(info)
             }
                 
         }
         
         task.resume()
     }
-
+    
+    static func performGetRequestForLoadingCharacterLocation(url: String, onComplete: @escaping (CharacterLocationModel) -> Void, onError: @escaping (Error) -> Void) {
+        
+        guard let request = makeGetRequest(urlString: url) else {
+            return
+        }
+        print(request)
+        
+        let session = URLSession.shared
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                onError(error)
+                return
+            }
+            guard let  data = data else {
+                onError(ServerError.noDataProvided)
+                return
+            }
+            guard let info = try? JSONDecoder().decode(CharacterLocationModel.self, from: data) else {
+                NSLog("Could not decode")
+                onError(ServerError.failedToDecode)
+                return
+            }
+            
+            DispatchQueue.main.async {
+                onComplete(info)
+            }
+                
+        }
+        
+        task.resume()
+    }
+    
+    static func performGetRequestForLoadingCharacterEpisodes(url: String, onComplete: @escaping (CharactersEpisodesModel) -> Void, onError: @escaping (Error) -> Void) {
+        
+        guard let request = makeGetRequest(urlString: url) else {
+            return
+        }
+        print(request)
+        
+        let session = URLSession.shared
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                onError(error)
+                return
+            }
+            guard let  data = data else {
+                onError(ServerError.noDataProvided)
+                return
+            }
+            guard let info = try? JSONDecoder().decode(CharactersEpisodesModel.self, from: data) else {
+                NSLog("Could not decode")
+                onError(ServerError.failedToDecode)
+                return
+            }
+            
+            DispatchQueue.main.async {
+                onComplete(info)
+            }
+                
+        }
+        
+        task.resume()
+    }
 }

@@ -9,7 +9,7 @@ import UIKit
 
 extension UIImageView {
     
-    func loadImageForCustomImageView(by imageURL: String, onComplete: @escaping (Data, String) -> Void) {
+    func loadCachedImage(by imageURL: String, onComplete: @escaping (Data, String) -> Void) {
  
         let url = URL(string: imageURL)!
         let cache = URLCache.shared

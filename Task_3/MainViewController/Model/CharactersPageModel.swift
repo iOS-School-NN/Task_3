@@ -1,5 +1,5 @@
 //
-//  CharacterСardModel.swift
+//  CharactersPageModel.swift
 //  Task_3
 //
 //  Created by KirRealDev on 12.07.2021.
@@ -7,8 +7,8 @@
 
 import Foundation
 
-// MARK: - CharacterСardModel
-struct CharacterСardModel: Codable {
+// MARK: - CharactersPageModel
+struct CharactersPageModel: Codable {
     let info: Info
     let results: [Result]
 }
@@ -24,7 +24,6 @@ struct Result: Codable {
     let id: Int
     let name: String
     let status: Status
-    //let species: Species
     let type: String
     let gender: Gender
     let origin, location: Location
@@ -41,10 +40,10 @@ enum Gender: String, Codable {
 }
 
 // MARK: - Location
-struct Location: Codable {
-    let name: String
-    let url: String
-}
+//struct Location: Codable {
+//    let name: String
+//    let url: String
+//}
 
 enum Status: String, Codable {
     case alive = "Alive"

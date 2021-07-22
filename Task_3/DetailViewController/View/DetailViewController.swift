@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DetailViewController: UIViewController, MainViewControllerDelegate {
+class DetailViewController: UIViewController, MainViewControllerDelegate, DetailViewModelDelegate {
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
@@ -25,21 +25,25 @@ class DetailViewController: UIViewController, MainViewControllerDelegate {
     @IBOutlet weak var detailEpisodesTitleLabel: UILabel!
     @IBOutlet private weak var detailDescriptionOfEpisodesTextView: UITextView!
     
-    //var viewModel: DetailViewModel
+    //private var id: Int = 0
+    var detailViewModel: DetailViewModel?
     var characterCardData: Result?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "character name"
-        loading()
+        preLoading()
         //setIBOutlets()
     }
     
-    func initCharacterCard(_ item: Result) {
-        characterCardData = item
+    func initCharacterCard(_ id: Int) {
+        self.detailViewModel = DetailViewModel(characterId: id)
+        self.detailViewModel?.delegate = self
+        print("INIT")
+        self.detailViewModel?.loadDetailInformation()
     }
     
-    private func loading() {
+    private func preLoading() {
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
         
@@ -57,16 +61,33 @@ class DetailViewController: UIViewController, MainViewControllerDelegate {
         detailDescriptionOfEpisodesTextView.text = ""
     }
     
-    private func setIBOutlets() {
-        guard let checkedData = characterCardData  else {
-            return
-        }
-        //detailCharacterImageView
-        self.navigationItem.title = checkedData.name
-        detailCharacterNameLabel.text = "Name: " + checkedData.name
-        detailCharacterGenderLabel.text = "Gender: " + checkedData.gender.rawValue
-        detailCharacterStatusLabel.text = "Status: " + checkedData.status.rawValue
-        detailCharacterTypeLabel.text = "Type: " + checkedData.type
+//    func setIBOutlets(characterCard: CharacterCardModel, characterLocation: CharacterLocationModel, characterEpisodes: CharactersEpisodesModel) {
+//        guard let checkedData = characterCardData  else {
+//            return
+//        }
+//        //detailCharacterImageView
+//        self.navigationItem.title = checkedData.name
+//        detailCharacterNameLabel.text = "Name: " + checkedData.name
+//        detailCharacterGenderLabel.text = "Gender: " + checkedData.gender.rawValue
+//        detailCharacterStatusLabel.text = "Status: " + checkedData.status.rawValue
+//        detailCharacterTypeLabel.text = "Type: " + checkedData.type
+//
+//        detailLocationTitleLabel.text = "Location: "
+//        detailCharacterLocationNameLabel.text = "Name: "
+//        detailCharacterLocationTypeLabel.text = "Type: "
+//
+//        detailEpisodesTitleLabel.text = "Episodes: "
+//        detailDescriptionOfEpisodesTextView.isSelectable = false
+//        detailDescriptionOfEpisodesTextView.text = "bla-bla-bla..."
+//    }
+    
+    func updateDetailViewBy(characterCard: CharacterCardModel, characterLocation: CharacterLocationModel, characterEpisodes: CharactersEpisodesModel) {
+        detailCharacterImageView.image = UIImage(named: characterCard.image)
+        self.navigationItem.title = characterCard.name
+        detailCharacterNameLabel.text = "Name: " + characterCard.name
+        detailCharacterGenderLabel.text = "Gender: " + characterCard.gender
+        detailCharacterStatusLabel.text = "Status: " + characterCard.status
+        detailCharacterTypeLabel.text = "Type: " + characterCard.type
         
         detailLocationTitleLabel.text = "Location: "
         detailCharacterLocationNameLabel.text = "Name: "
@@ -75,6 +96,9 @@ class DetailViewController: UIViewController, MainViewControllerDelegate {
         detailEpisodesTitleLabel.text = "Episodes: "
         detailDescriptionOfEpisodesTextView.isSelectable = false
         detailDescriptionOfEpisodesTextView.text = "bla-bla-bla..."
+        
+        activityIndicator.stopAnimating()
+        activityIndicator.isHidden = true
     }
 
 

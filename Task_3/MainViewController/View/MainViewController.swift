@@ -8,7 +8,7 @@
 import UIKit
 
 protocol MainViewControllerDelegate: AnyObject {
-    func initCharacterCard(_ item: Result)
+    func initCharacterCard(_ id: Int)
 }
 
 class MainViewController: UIViewController, MainViewModelDelegate {
@@ -18,18 +18,20 @@ class MainViewController: UIViewController, MainViewModelDelegate {
     private let MainTableViewCellIdentifier = "characterCell"
     private let showDetailViewSegueIdentifier = "showDetailVC"
     
+    private let heightForRow: CGFloat = 112.0
+    
     private var dataArray = [Result]()
     
     weak var mainViewDelegate: MainViewControllerDelegate? = nil
     
-    private let model = MainViewModel()
+    private let mainViewModel = MainViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "list of characters"
-        model.delegate = self
+        mainViewModel.delegate = self
         configureTableView()
-        model.loadStartInformation()
+        mainViewModel.loadInformation()
 //
         
 //        let charactersDispatchGroup = DispatchGroup()
@@ -105,16 +107,7 @@ class MainViewController: UIViewController, MainViewModelDelegate {
 //           }
 //    }
     func updateTableViewBy(item: [Result]) {
-//        self.dataArrayForHorizontalCell = item[0]
-//        self.dataArrayForTwoSquareItemCell = [CatModelElement]()
-//        for iter in 1..<3 {
-//            self.dataArrayForTwoSquareItemCell?.append(item[iter])
-//        }
-//        self.dataArrayForCollectionItemCell = [CatModelElement]()
-//        for iter in 3..<6 {
-//            self.dataArrayForCollectionItemCell?.append(item[iter])
-//        }
-        self.dataArray = item
+        self.dataArray = self.dataArray + item
         self.mainTableView.reloadData()
     }
     
@@ -129,15 +122,6 @@ class MainViewController: UIViewController, MainViewModelDelegate {
         mainTableView.register(UINib(nibName: String(describing: CharacterTableViewCell.self), bundle: nil), forCellReuseIdentifier: MainTableViewCellIdentifier)
     }
     
-    
-//    private func createNewRow(forItemAtIndex index: Int) {
-//        let indexPath = IndexPath(row: index, section: 0)
-//
-//        if self.mainTableView.indexPathsForVisibleRows?.contains(indexPath) ?? false {
-//            self.mainTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .fade)
-//        }
-//    }
-    
 }
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
@@ -147,7 +131,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 112.0
+        return heightForRow
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -159,49 +143,19 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         
-//        if indexPath.row == self.characterInfo?.count {
-//              loadNextCell()
-//              return cell
-//        }
-//        let lastRow = indexPath.row
-//        if indexPath.row == item.count - 1 {
-//            loadNextCell(indexPathRow: indexPath.row)
-//            //return
-//        }
-        
         cell.configure(dataArray[indexPath.row])
         return cell
     }
 
-
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         mainTableView.deselectRow(at: indexPath, animated: true)
-        //performSegue(withIdentifier: showDetailViewSegueIdentifier, sender: self)
         let detailViewController = storyboard?.instantiateViewController(identifier: "detailViewIdentifier") as! DetailViewController
-//        guard let item = characterInfo?[indexPath.row] else {
-//            return
-//        }
+
         mainViewDelegate = detailViewController
         print("I'm create")
-        mainViewDelegate?.initCharacterCard(dataArray[indexPath.row])
+        mainViewDelegate?.initCharacterCard(dataArray[indexPath.row].id)
         navigationController?.pushViewController(detailViewController, animated: true)
     }
-    
-//    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-//        print("MMMMMMm")
-//        guard let item = self.characterInfo else {
-//            return
-//        }
-//
-//        if indexPath.row == item.count - 1 {
-//            loadNextCell(indexPathRow: indexPath.row)
-//            //return
-//        }
-//        let lastRow = indexPath.row
-//                if lastRow == item.count - 1 {
-//                    print("FFFF")
-//                }
-//    }
 
 }
 

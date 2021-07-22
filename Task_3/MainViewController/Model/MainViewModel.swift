@@ -16,7 +16,7 @@ final class MainViewModel {
     weak var delegate: MainViewModelDelegate?
     private var baseURL: String = ""
     private var pageId: Int = 1
-    //private var dataArray = [Result]()
+    private var additionalPagesArray = [Result]()
     
     let queueForLoadAdditionalPages = DispatchQueue(
         label: "com.task_3.queueForLoadAdditionalPages",
@@ -27,31 +27,17 @@ final class MainViewModel {
         self.baseURL = NetworkConstants.urlForLoadingListOfCharacters
     }
     
-    func loadStartInformation() {
+    func loadInformation() {
         DispatchQueue.global(qos: .userInitiated).async {
             self.loadInformationByPage(urlString: NetworkConstants.urlForLoadingListOfCharacters, id: self.pageId)
         }
     }
     
     func loadInformationByPage(urlString: String, id: Int) {
-        NetworkService.performGetRequest(url: urlString, pageId: id, onComplete: { [weak self] (data, id) in
+        NetworkService.performGetRequestForLoadingPages(url: urlString, pageId: id, onComplete: { [weak self] (data, id) in
                 print("HELLO", id)
-                
-                if (self?.pageId == 1) {
-                    self?.delegate?.updateTableViewBy(item: data.results)
-                    self?.asyncDownloadCharactersInfo(count: 10, with: 3)
-                } else {
-                    self?.delegate?.updateDataBy(item: data.results)
-                }
-                self?.pageId = (self?.pageId ?? 0) + 1
-            
-//                if (self?.currentPage == 1) {
-//                    self?.characterInfo = self?.dictOfPages[self?.currentPage ?? 1]
-//                    self?.mainTableView.reloadData()
-//                    //self?.queueForLoadAdditionalPages.activate()
-//                    self?.asyncDownloadCharactersInfo(count: 10, with: 3)
-//                }
-                
+                self?.delegate?.updateTableViewBy(item: data.results)
+                self?.asyncDownloadCharactersInfoByPage(count: data.info.pages, with: 3)
                 
         }) { (error, id) in
                 NSLog(error.localizedDescription)
@@ -59,22 +45,39 @@ final class MainViewModel {
            }
     }
     
-    func asyncDownloadCharactersInfo(count: Int, with pageSize: Int) {
+    func asyncDownloadCharactersInfoByPage(count: Int, with pageSize: Int) {
         let queue = DispatchQueue(label: "com.task_3.semaphore", attributes: .concurrent)
+        //queue.
+
         let semaphore = DispatchSemaphore(value: pageSize)
     
         for i in 2...count {
             queue.async {
-                let itemNumber = i
                 semaphore.wait()
-                print("Загрузка началась \(itemNumber)")
-                self.loadInformationByPage(urlString: "https://rickandmortyapi.com/api/character?page=" + String(i), id: i)
-                print("Загрузка завершилась \(itemNumber)")
-                  semaphore.signal()
+                NetworkService.performGetRequestForLoadingPages(url: NetworkConstants.urlForLoadingListOfCharacters + "?page=" + String(i), pageId: i, onComplete: { [weak self] (data, id) in
+                        print("HELLO", id)
+                        self?.additionalPagesArray = self!.additionalPagesArray + data.results
+                        semaphore.signal()
+                        if (i == count) {
+                            print("All")
+                            self?.delegate?.updateDataBy(item: (self!.additionalPagesArray.sorted { $0.id < $1.id }))
+                        }
+                        if (self?.additionalPagesArray.count == 3 * 20) {
+                            self!.delegate?.updateDataBy(item: (self!.additionalPagesArray.sorted { $0.id < $1.id }))
+                            self?.additionalPagesArray.removeAll()
+                            print("three")
+                        }
+                        
+                }) { (error, id) in
+                        NSLog(error.localizedDescription)
+                        print("HELLO", id)
+                        semaphore.signal()
+                   }
             }
+        }
         }
     }
 
-}
+
 
 
