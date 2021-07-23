@@ -32,80 +32,9 @@ class MainViewController: UIViewController, MainViewModelDelegate {
         mainViewModel.delegate = self
         configureTableView()
         mainViewModel.loadInformation()
-//
-        
-//        let charactersDispatchGroup = DispatchGroup()
-//        for i in 2...5 {
-//            queueForLoadAdditionalPages.async(group: charactersDispatchGroup) {
-//                self.loadCharacterInformation(urlString: "https://rickandmortyapi.com/api/character?page=" + String(i), characterId: i)
-//                //print("DONE,", i)
-//            }
-//        }
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-//        let pageId: Int = 1
-//        DispatchQueue.global(qos: .userInitiated).async {
-//            self.loadCharacterInformation(urlString: "https://rickandmortyapi.com/api/character", characterId: pageId)
-//        }
-//
-//        let charactersDispatchGroup = DispatchGroup()
-//        for i in 2...5 {
-//            queueForLoadAdditionalPages.async(group: charactersDispatchGroup) {
-//                self.loadCharacterInformation(urlString: "https://rickandmortyapi.com/api/character?page=" + String(i), characterId: i)
-//                //print("DONE,", i)
-//            }
-//        }
-        
-        
-//        charactersDispatchGroup.notify(queue: DispatchQueue.main) {
-//            for i in 2...5 {
-//                print("DONE,", i)
-//            }
-//        }
-        
-//        defaultGlobal.async {
-//            loadCharacterInformation(urlString: "https://rickandmortyapi.com/api/character?page=" + String(i))
-//        }
-    }
-    
 
-    
-//    func loadCharacterInformation(urlString: String, characterId: Int) {
-//        NetworkService.performGetRequest(url: urlString, pageId: characterId, onComplete: { [weak self] (data, id) in
-//                self?.dictOfPages[id] = data.results
-//                print("HELLO", id)
-//                //print(self?.characterInfo!)
-//
-//
-//                if (self?.currentPage == 1) {
-//                    self?.characterInfo = self?.dictOfPages[self?.currentPage ?? 1]
-//                    self?.mainTableView.reloadData()
-//                    //self?.queueForLoadAdditionalPages.activate()
-//                    self?.asyncDownloadCharactersInfo(count: 10, with: 3)
-//                }
-//
-//                if (id == self?.currentPage) {
-//                    self?.currentPage = (self?.currentPage ?? 0) + 1
-//                    //self?.characterInfo?.append(contentsOf: (self?.dictOfPages[id]!)!)
-//                    print("обновил с ID = ", id)
-//                }
-//                print(self?.currentPage)
-//        }) { (error, id) in
-//                NSLog(error.localizedDescription)
-//                print("HELLO", id)
-//           }
-//    }
-    
-//    func loadCharacterAdditionalInformation(urlString: String, characterId: Int) {
-//        NetworkService.performGetRequest(url: urlString, pageId: characterId, onComplete: { [weak self] (data, id) in
-//                print("HELLO", id)
-//                self?.dictOfPages[id] = data
-//                self?.mainTableView.reloadData() }) { (error, id) in
-//                NSLog(error.localizedDescription)
-//                print("HELLO", id)
-//           }
-//    }
+    }
+
     func updateTableViewBy(item: [Result]) {
         self.dataArray = self.dataArray + item
         self.mainTableView.reloadData()
@@ -121,7 +50,6 @@ class MainViewController: UIViewController, MainViewModelDelegate {
         mainTableView.dataSource = self
         mainTableView.register(UINib(nibName: String(describing: CharacterTableViewCell.self), bundle: nil), forCellReuseIdentifier: MainTableViewCellIdentifier)
     }
-    
 }
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {

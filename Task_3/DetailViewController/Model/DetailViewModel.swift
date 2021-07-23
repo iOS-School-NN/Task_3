@@ -8,73 +8,75 @@
 import Foundation
 
 protocol DetailViewModelDelegate: AnyObject {
-    func updateDetailViewBy(characterCard: CharacterCardModel, characterLocation: CharacterLocationModel, characterEpisodes: CharactersEpisodesModel)
+    func updateDetailViewBy(characterCard: CharacterCardModel, characterLocation: CharacterLocationModel, characterEpisodes: [CharactersEpisodesModel])
 }
 
 final class DetailViewModel {
     var id: Int
-    var characterCard: CharacterLocationModel?
+    var characterCard: CharacterCardModel?
     var characterLocation: CharacterLocationModel?
-    var characterEpisodes: CharactersEpisodesModel?
+    var characterEpisodes = [CharactersEpisodesModel]()
     
     weak var delegate: DetailViewModelDelegate?
-    
     let dispatchGroup = DispatchGroup()
-    let queueForLoadAdditionalPages = DispatchQueue(
-        label: "com.task_3.queueForLoadDetailInformation",
-        attributes: [.concurrent, .initiallyInactive]
-    )
-    
+    let queue = DispatchQueue.global(qos: .userInitiated)
     
     init(characterId: Int) {
         self.id = characterId
     }
     
     func loadDetailInformation() {
-        print("I'm Load")
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.loadCharacterCard(urlString: NetworkConstants.urlForLoadingListOfCharacters + "/\(self.id)")
+        queue.async {
+            self.loadCharacterCard(urlString: NetworkConstants.urlForLoadingListOfCharacters + "/" + String(self.id))
         }
-        
     }
     
     func loadCharacterCard(urlString: String) {
-        dispatchGroup.enter()
         NetworkService.performGetRequestForLoadingCharacterCard(url: urlString, onComplete: { [weak self] (data) in
-            self?.dispatchGroup.leave()
-            self?.loadCharacterLocation(urlString: data.location.url)
-//            self?.loadCharacterEpisodes(urlString: data.episode)
+            let checkedData = data
+            self?.characterCard = checkedData
+            self?.queue.async(group: self?.dispatchGroup, qos: .userInitiated)  {
+                self?.loadCharacterLocation(urlString: data.location.url)
+            }
+            self?.queue.async(group: self?.dispatchGroup, qos: .userInitiated)  {
+                for url in data.episode {
+                    self?.loadCharacterEpisodes(urlString: url)
+                }
+            }
+            
+            self?.dispatchGroup.notify(queue: DispatchQueue.main) {
+                print("finish")
+                self?.delegate?.updateDetailViewBy(characterCard: (self?.characterCard)!, characterLocation: (self?.characterLocation)!, characterEpisodes: self!.characterEpisodes)
+            }
                 
         }) { (error) in
                 NSLog(error.localizedDescription)
-                print("HELLO")
            }
     }
     
     func loadCharacterLocation(urlString: String) {
         dispatchGroup.enter()
-        NetworkService.performGetRequestForLoadingCharacterCard(url: urlString, onComplete: { [weak self] (data) in
+        NetworkService.performGetRequestForLoadingCharacterLocation(url: urlString, onComplete: { [weak self] (data) in
+            let checkedData = data
+            self?.characterLocation = checkedData
             print("location")
             self?.dispatchGroup.leave()
                 
         }) { (error) in
                 NSLog(error.localizedDescription)
-                print("HELLO")
            }
     }
     
     func loadCharacterEpisodes(urlString: String) {
         dispatchGroup.enter()
-        NetworkService.performGetRequestForLoadingCharacterCard(url: urlString, onComplete: { [weak self] (data) in
-            self?.dispatchGroup.leave()
+        NetworkService.performGetRequestForLoadingCharacterEpisodes(url: urlString, onComplete: { [weak self] (data) in
+            let checkedData = data
             print("episodes")
-            //self?.characterCard = characterCard
-                //self?.delegate?.updateDetailViewBy(item: data.results)
-                //self?.asyncDownloadCharactersInfoByPage(count: data.info.pages, with: 3)
+            self?.characterEpisodes.append(checkedData)
+            self?.dispatchGroup.leave()
                 
         }) { (error) in
                 NSLog(error.localizedDescription)
-                print("HELLO")
            }
     }
 }

@@ -9,7 +9,7 @@ import UIKit
 
 extension UIImageView {
     
-    func loadCachedImage(by imageURL: String, onComplete: @escaping (Data, String) -> Void) {
+    func loadImageWithCache(by imageURL: String, onComplete: @escaping (Data, String) -> Void) {
  
         let url = URL(string: imageURL)!
         let cache = URLCache.shared
@@ -34,5 +34,21 @@ extension UIImageView {
             }.resume()
          }
     }
+    
+    func loadImageWithoutCache(by imageURL: String) {
+ 
+        let url = URL(string: imageURL)!
+        let request = URLRequest(url: url)
+        
+        URLSession.shared.dataTask(with: request) { (data, response, _) in
+            DispatchQueue.main.async {
+                guard let data = data, let response = response else {
+                    return
+                }
+                    self.image = UIImage(data: data)
+                }
+            }.resume()
+         }
+    }
 
-}
+

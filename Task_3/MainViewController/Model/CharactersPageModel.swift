@@ -39,12 +39,6 @@ enum Gender: String, Codable {
     case unknown = "unknown"
 }
 
-// MARK: - Location
-//struct Location: Codable {
-//    let name: String
-//    let url: String
-//}
-
 enum Status: String, Codable {
     case alive = "Alive"
     case dead = "Dead"

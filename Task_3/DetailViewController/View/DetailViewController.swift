@@ -61,28 +61,8 @@ class DetailViewController: UIViewController, MainViewControllerDelegate, Detail
         detailDescriptionOfEpisodesTextView.text = ""
     }
     
-//    func setIBOutlets(characterCard: CharacterCardModel, characterLocation: CharacterLocationModel, characterEpisodes: CharactersEpisodesModel) {
-//        guard let checkedData = characterCardData  else {
-//            return
-//        }
-//        //detailCharacterImageView
-//        self.navigationItem.title = checkedData.name
-//        detailCharacterNameLabel.text = "Name: " + checkedData.name
-//        detailCharacterGenderLabel.text = "Gender: " + checkedData.gender.rawValue
-//        detailCharacterStatusLabel.text = "Status: " + checkedData.status.rawValue
-//        detailCharacterTypeLabel.text = "Type: " + checkedData.type
-//
-//        detailLocationTitleLabel.text = "Location: "
-//        detailCharacterLocationNameLabel.text = "Name: "
-//        detailCharacterLocationTypeLabel.text = "Type: "
-//
-//        detailEpisodesTitleLabel.text = "Episodes: "
-//        detailDescriptionOfEpisodesTextView.isSelectable = false
-//        detailDescriptionOfEpisodesTextView.text = "bla-bla-bla..."
-//    }
-    
-    func updateDetailViewBy(characterCard: CharacterCardModel, characterLocation: CharacterLocationModel, characterEpisodes: CharactersEpisodesModel) {
-        detailCharacterImageView.image = UIImage(named: characterCard.image)
+    func updateDetailViewBy(characterCard: CharacterCardModel, characterLocation: CharacterLocationModel, characterEpisodes: [CharactersEpisodesModel]) {
+        detailCharacterImageView.loadImageWithoutCache(by: characterCard.image)
         self.navigationItem.title = characterCard.name
         detailCharacterNameLabel.text = "Name: " + characterCard.name
         detailCharacterGenderLabel.text = "Gender: " + characterCard.gender
@@ -90,16 +70,20 @@ class DetailViewController: UIViewController, MainViewControllerDelegate, Detail
         detailCharacterTypeLabel.text = "Type: " + characterCard.type
         
         detailLocationTitleLabel.text = "Location: "
-        detailCharacterLocationNameLabel.text = "Name: "
-        detailCharacterLocationTypeLabel.text = "Type: "
+        detailCharacterLocationNameLabel.text = "Name: " + characterLocation.name
+        detailCharacterLocationTypeLabel.text = "Type: " + characterLocation.type
         
         detailEpisodesTitleLabel.text = "Episodes: "
         detailDescriptionOfEpisodesTextView.isSelectable = false
-        detailDescriptionOfEpisodesTextView.text = "bla-bla-bla..."
+
+        var string = ""
+        for i in 0..<characterEpisodes.count {
+            string = string + "• " + (characterEpisodes[i].episode + "/" + characterEpisodes[i].name + "/" + characterEpisodes[i].airDate) + "\n"
+        }
+        let attributedString = NSMutableAttributedString(string: string)
+        detailDescriptionOfEpisodesTextView.attributedText = attributedString
         
         activityIndicator.stopAnimating()
         activityIndicator.isHidden = true
     }
-
-
 }
