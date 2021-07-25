@@ -12,14 +12,14 @@ protocol DetailViewModelDelegate: AnyObject {
 }
 
 final class DetailViewModel {
-    var id: Int
-    var characterCard: CharacterCardModel?
-    var characterLocation: CharacterLocationModel?
-    var characterEpisodes = [CharactersEpisodesModel]()
+    private var id: Int
+    private var characterCard: CharacterCardModel?
+    private var characterLocation: CharacterLocationModel?
+    private var characterEpisodes = [CharactersEpisodesModel]()
     
     weak var delegate: DetailViewModelDelegate?
-    let dispatchGroup = DispatchGroup()
-    let queue = DispatchQueue.global(qos: .userInitiated)
+    private let dispatchGroup = DispatchGroup()
+    private let queue = DispatchQueue.global(qos: .userInitiated)
     
     init(characterId: Int) {
         self.id = characterId
@@ -27,7 +27,7 @@ final class DetailViewModel {
     
     func loadDetailInformation() {
         queue.async {
-            self.loadCharacterCard(urlString: NetworkConstants.urlForLoadingListOfCharacters + "/" + String(self.id))
+            self.loadCharacterCard(urlString: NetworkConstants.urlForLoadingListOfCharacters + "/\(self.id)")
         }
     }
     
@@ -35,10 +35,10 @@ final class DetailViewModel {
         NetworkService.performGetRequestForLoadingCharacterCard(url: urlString, onComplete: { [weak self] (data) in
             let checkedData = data
             self?.characterCard = checkedData
-            self?.queue.async(group: self?.dispatchGroup, qos: .userInitiated)  {
+            self?.queue.async(group: self?.dispatchGroup, qos: .userInitiated) {
                 self?.loadCharacterLocation(urlString: data.location.url)
             }
-            self?.queue.async(group: self?.dispatchGroup, qos: .userInitiated)  {
+            self?.queue.async(group: self?.dispatchGroup, qos: .userInitiated) {
                 for url in data.episode {
                     self?.loadCharacterEpisodes(urlString: url)
                 }

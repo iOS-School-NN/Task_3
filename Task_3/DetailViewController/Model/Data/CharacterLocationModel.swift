@@ -14,4 +14,3 @@ struct CharacterLocationModel: Codable {
     let url: String
     let created: String
 }
-

@@ -15,45 +15,36 @@ class MainViewController: UIViewController, MainViewModelDelegate {
     
     @IBOutlet private weak var mainTableView: UITableView!
     
-    private let MainTableViewCellIdentifier = "characterCell"
-    private let showDetailViewSegueIdentifier = "showDetailVC"
+    private let mainTableViewCellIdentifier = "characterCell"
+    private let detailViewIdentifier = "detailViewController"
     
     private let heightForRow: CGFloat = 112.0
-    
     private var dataArray = [Result]()
-    
-    weak var mainViewDelegate: MainViewControllerDelegate? = nil
-    
     private let mainViewModel = MainViewModel()
+    
+    weak var mainViewDelegate: MainViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "list of characters"
+        self.navigationItem.title = "List of Characters"
         mainViewModel.delegate = self
         configureTableView()
         mainViewModel.loadInformation()
-
     }
 
     func updateTableViewBy(item: [Result]) {
-        self.dataArray = self.dataArray + item
-        self.mainTableView.reloadData()
-    }
-    
-    func updateDataBy(item: [Result]) {
-        self.dataArray = self.dataArray + item
+        self.dataArray += item
         self.mainTableView.reloadData()
     }
     
     private func configureTableView() {
         mainTableView.delegate = self
         mainTableView.dataSource = self
-        mainTableView.register(UINib(nibName: String(describing: CharacterTableViewCell.self), bundle: nil), forCellReuseIdentifier: MainTableViewCellIdentifier)
+        mainTableView.register(UINib(nibName: String(describing: CharacterTableViewCell.self), bundle: nil), forCellReuseIdentifier: mainTableViewCellIdentifier)
     }
 }
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataArray.count
     }
@@ -63,11 +54,11 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = mainTableView.dequeueReusableCell(withIdentifier: MainTableViewCellIdentifier) as? CharacterTableViewCell else {
+        guard let cell = mainTableView.dequeueReusableCell(withIdentifier: mainTableViewCellIdentifier) as? CharacterTableViewCell else {
             return UITableViewCell()
         }
        
-        if dataArray.count == 0 {
+        if dataArray.isEmpty {
             return UITableViewCell()
         }
         
@@ -77,13 +68,11 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         mainTableView.deselectRow(at: indexPath, animated: true)
-        let detailViewController = storyboard?.instantiateViewController(identifier: "detailViewIdentifier") as! DetailViewController
-
+        guard let detailViewController = storyboard?.instantiateViewController(identifier: detailViewIdentifier) as? DetailViewController else {
+            return
+        }
         mainViewDelegate = detailViewController
-        print("I'm create")
         mainViewDelegate?.initCharacterCard(dataArray[indexPath.row].id)
         navigationController?.pushViewController(detailViewController, animated: true)
     }
-
 }
-

@@ -108,6 +108,24 @@
 			path = Task_3;
 			sourceTree = "<group>";
 		};
+		FB7CD38A26ACDCFF00280FAF /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				FBBC8D7E269DF91D00323310 /* CharacterLocationModel.swift */,
+				FBF0128B26A9ED3000C63708 /* CharactersEpisodesModel.swift */,
+				FBF0128D26A9F4CE00C63708 /* CharacterCardModel.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		FB7CD38B26ACDD2200280FAF /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				FBC9BD31269B949B0049C291 /* CharactersPageModel.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
 		FBBC8D75269DB21400323310 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -138,7 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				FBFFFC8C26A1CD8800C3BDD0 /* MainViewModel.swift */,
-				FBC9BD31269B949B0049C291 /* CharactersPageModel.swift */,
+				FB7CD38B26ACDD2200280FAF /* Data */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -164,9 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				FBEDC8C226A091B7006A913E /* DetailViewModel.swift */,
-				FBF0128D26A9F4CE00C63708 /* CharacterCardModel.swift */,
-				FBBC8D7E269DF91D00323310 /* CharacterLocationModel.swift */,
-				FBF0128B26A9ED3000C63708 /* CharactersEpisodesModel.swift */,
+				FB7CD38A26ACDCFF00280FAF /* Data */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -198,6 +214,7 @@
 				FB6BC035269B120B00F95DD3 /* Sources */,
 				FB6BC036269B120B00F95DD3 /* Frameworks */,
 				FB6BC037269B120B00F95DD3 /* Resources */,
+				FB7CD38926ACD23B00280FAF /* SwiftLint */,
 			);
 			buildRules = (
 			);
@@ -253,6 +270,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		FB7CD38926ACD23B00280FAF /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"error: SwiftLint does not exist, download it from https://github.com/realm/SwiftLint\"\n  exit 1\nfi\n\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		FB6BC035269B120B00F95DD3 /* Sources */ = {

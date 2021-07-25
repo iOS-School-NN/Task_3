@@ -42,6 +42,9 @@ struct NetworkService {
                 onError(error, pageId)
                 return
             }
+            if let httpResponse = response as? HTTPURLResponse {
+                print("error: \(httpResponse.statusCode)")
+            }
             guard let  data = data else {
                 onError(ServerError.noDataProvided, pageId)
                 return
@@ -74,6 +77,9 @@ struct NetworkService {
             if let error = error {
                 onError(error)
                 return
+            }
+            if let httpResponse = response as? HTTPURLResponse {
+                print("error: \(httpResponse.statusCode)")
             }
             guard let  data = data else {
                 onError(ServerError.noDataProvided)
@@ -108,6 +114,9 @@ struct NetworkService {
                 onError(error)
                 return
             }
+            if let httpResponse = response as? HTTPURLResponse {
+                print("error: \(httpResponse.statusCode)")
+            }
             guard let  data = data else {
                 onError(ServerError.noDataProvided)
                 return
@@ -140,6 +149,9 @@ struct NetworkService {
             if let error = error {
                 onError(error)
                 return
+            }
+            if let httpResponse = response as? HTTPURLResponse {
+                print("error: \(httpResponse.statusCode)")
             }
             guard let  data = data else {
                 onError(ServerError.noDataProvided)

@@ -5,7 +5,6 @@
 //  Created by KirRealDev on 22.07.2021.
 //
 
-
 // MARK: - CharacterCardModel
 struct CharacterCardModel: Codable {
     let id: Int

@@ -9,7 +9,7 @@ import UIKit
 
 class DetailViewController: UIViewController, MainViewControllerDelegate, DetailViewModelDelegate {
     
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     @IBOutlet private weak var detailCharacterImageView: UIImageView!
     
@@ -18,28 +18,25 @@ class DetailViewController: UIViewController, MainViewControllerDelegate, Detail
     @IBOutlet private weak var detailCharacterStatusLabel: UILabel!
     @IBOutlet private weak var detailCharacterTypeLabel: UILabel!
     
-    @IBOutlet weak var detailLocationTitleLabel: UILabel!
+    @IBOutlet private weak var detailLocationTitleLabel: UILabel!
     @IBOutlet private weak var detailCharacterLocationNameLabel: UILabel!
     @IBOutlet private weak var detailCharacterLocationTypeLabel: UILabel!
     
-    @IBOutlet weak var detailEpisodesTitleLabel: UILabel!
+    @IBOutlet private weak var detailEpisodesTitleLabel: UILabel!
     @IBOutlet private weak var detailDescriptionOfEpisodesTextView: UITextView!
     
-    //private var id: Int = 0
     var detailViewModel: DetailViewModel?
     var characterCardData: Result?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "character name"
+        self.navigationItem.title = "Loading..."
         preLoading()
-        //setIBOutlets()
     }
     
     func initCharacterCard(_ id: Int) {
         self.detailViewModel = DetailViewModel(characterId: id)
         self.detailViewModel?.delegate = self
-        print("INIT")
         self.detailViewModel?.loadDetailInformation()
     }
     
@@ -78,8 +75,9 @@ class DetailViewController: UIViewController, MainViewControllerDelegate, Detail
 
         var string = ""
         for i in 0..<characterEpisodes.count {
-            string = string + "• " + (characterEpisodes[i].episode + "/" + characterEpisodes[i].name + "/" + characterEpisodes[i].airDate) + "\n"
+            string += "• " + (characterEpisodes[i].episode + "/" + characterEpisodes[i].name + "/" + characterEpisodes[i].airDate) + "\n"
         }
+        
         let attributedString = NSMutableAttributedString(string: string)
         detailDescriptionOfEpisodesTextView.attributedText = attributedString
         

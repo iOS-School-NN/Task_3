@@ -1,0 +1,21 @@
+disabled_rules:
+  - colon
+  - comma
+  - control_statement
+  - trailing_whitespace
+  
+opt_in_rules:
+  - empty_count
+  - missing_docs
+
+line_length:
+  - 300 # warning
+  - 700 # error
+    
+identifier_name:
+  excluded: # excluded via string array
+    - id
+    - url
+    - i
+
+
