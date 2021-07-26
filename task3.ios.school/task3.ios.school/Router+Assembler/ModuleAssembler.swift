@@ -14,11 +14,11 @@ protocol ModuleAssembling {
 }
 
 class ModuleAssembler: ModuleAssembling {
-
     
     func createMainModule(router: MainRouting) -> UIViewController {
         let startViewComtroller = ViewController()
         startViewComtroller.router = router
+        startViewComtroller.apiManager = ApiManager()
         return startViewComtroller
     }
     

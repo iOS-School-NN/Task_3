@@ -7,36 +7,56 @@
 //
 
 import Foundation
+import UIKit
 //
 
 struct Character: Codable {
     let id: Int
     let name, status, species, type: String
     let gender: String
-    let origin, location: Location
+    let origin, location: CharacterLocation
     let image: String
     let episode: [String]
     let url: String
     let created: String
 }
 
-struct Location: Codable {
+struct CharacterLocation: Codable {
     let name: String
     let url: String
 }
 
-struct CharatersResults: Codable {
-    let info: infos
+struct CharatersResponse: Codable {
+    let info: Info
     let results: [Character]
 }
 
-struct infos: Codable {
+struct Info: Codable {
     let count: Int
     let pages: Int
     let next: String?
     let prev: String?
 }
 
+struct EpisodeResponse: Codable {
+    let info: Info
+    let results: [Episode]
+}
+
+struct Episode: Codable {
+    let id: Int
+    let name: String
+    let airDate: String
+    let episode: String
+    let characters: [String]
+    let url: String
+    let created: String
+}
+
+struct customizedCharacterResult {
+    let character: Character?
+    let image: UIImage?
+}
 
 typealias Characters = [Character]
 //

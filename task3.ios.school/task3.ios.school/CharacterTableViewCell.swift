@@ -9,6 +9,7 @@
 import UIKit
 
 class CharacterTableViewCell: UITableViewCell {
+    let apiManager = ApiManager()
     
     var characterImageView = UIImageView()
     var characterTitleLabel = UILabel()
@@ -35,12 +36,9 @@ class CharacterTableViewCell: UITableViewCell {
     }
     
     func set(character: Character) {
-        characterTitleLabel.text = character.name
         let imageSource = character.image
-//        print(character.image)
         if let url = URL(string: imageSource) {
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-                
                 if let error = error {
                     print(error)
                 } else {
@@ -63,6 +61,7 @@ class CharacterTableViewCell: UITableViewCell {
     }
 
     func configureTitleLabel() {
+        characterTitleLabel.textColor = UIColor.white
         characterTitleLabel.numberOfLines = 0
         characterTitleLabel.adjustsFontSizeToFitWidth = true
     }

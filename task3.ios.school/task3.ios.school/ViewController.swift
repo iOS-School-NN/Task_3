@@ -13,6 +13,7 @@ class ViewController: UIViewController, Routerable {
     
     typealias Router = MainRouting
     var router: MainRouting?
+    var apiManager: ApiManager?
     
     let tableView = UITableView.init(frame: .zero, style: .plain)
     var cellIdentifier = "Cell"
@@ -23,43 +24,39 @@ class ViewController: UIViewController, Routerable {
             }
         }
     }
+    var CustomChar = [customizedCharacterResult]()
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Список персонажей"
         
         getCharacters()
-        getCharacters1()
-        
+        CustomChar = apiManager?.getCustomCharactersFromFirstPage(character: characters1) as! [customizedCharacterResult]
         createTableView()
-        
-        
-
+        getCharactersTwoToLastPage(number: 34)
     }
     
     func getCharacters() {
-        ApiManager.shared.getCharacters { result in
+        apiManager?.getCharactersFromFirstPage { result in
             switch result {
             case .failure(let error):
                 print(error)
             case .success(let characters):
-                print(characters)
                 self.characters1.append(contentsOf: characters)
-//                print(self.characters1.count)
-
+                self.characters1 = self.characters1.sorted { ($0.id < $1.id) }
+                }
             }
         }
-    }
-    func getCharacters1() {
-        ApiManager.shared.getCharacters1 { result in
+    
+    func getCharactersTwoToLastPage(number: Int) {
+        apiManager?.getCharactersTwoToLastPage(numberOfPages: number) { result in
             switch result {
             case .failure(let error):
                 print(error)
             case .success(let characters):
-                print(characters)
                 self.characters1.append(contentsOf: characters)
-//                print(self.characters1.count)
-
+                self.characters1 = self.characters1.sorted { ($0.id < $1.id) }
             }
         }
     }
@@ -78,20 +75,21 @@ class ViewController: UIViewController, Routerable {
             tableView.topAnchor.constraint(equalTo: view.topAnchor)])
     }
 
-    
-    
+
 }
 
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return characters1.count
+        return CustomChar.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! CharacterTableViewCell
         let characterCell = characters1[indexPath.row]
         cell.accessoryType = .disclosureIndicator
-        cell.set(character: characterCell)
+        cell.characterTitleLabel.text = characterCell.name
+//        cell.imageView?.image = apiManager?.set(character: characterCell).image
+        cell.imageView?.image = apiManager?.getImage(imageURL: characterCell.image)
         return cell
     }
     
@@ -99,6 +97,6 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         tableView.allowsSelection = true
         tableView.deselectRow(at: indexPath, animated: true)
         
-        router?.goToDetailModule(character: characters1[indexPath.row], image: UIImage(named: "Apple")!)
+        router?.goToDetailModule(character: characters1[indexPath.row], image: ( tableView.cellForRow(at: indexPath)?.imageView?.image)!)
     }
 }
