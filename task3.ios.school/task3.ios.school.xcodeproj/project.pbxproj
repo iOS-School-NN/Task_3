@@ -20,6 +20,7 @@
 		D63A2ADD269C3E3E0014A6E3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D63A2ADC269C3E3E0014A6E3 /* Assets.xcassets */; };
 		D63A2AE0269C3E3E0014A6E3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D63A2ADE269C3E3E0014A6E3 /* LaunchScreen.storyboard */; };
 		D63A2AE8269C5C990014A6E3 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63A2AE7269C5C990014A6E3 /* Model.swift */; };
+		D6E003B126AFEEEE000B4FBA /* UIImageViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E003B026AFEEED000B4FBA /* UIImageViewExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		D63A2ADF269C3E3E0014A6E3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D63A2AE1269C3E3E0014A6E3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D63A2AE7269C5C990014A6E3 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		D6E003B026AFEEED000B4FBA /* UIImageViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,11 +85,12 @@
 				D63A2AD3269C3E3A0014A6E3 /* AppDelegate.swift */,
 				D63A2AD5269C3E3A0014A6E3 /* SceneDelegate.swift */,
 				D625A59C26A5CAFF00540B84 /* Router+Assembler */,
-				D625A59226A4528300540B84 /* ApiManager.swift */,
 				D63A2AD7269C3E3A0014A6E3 /* ViewController.swift */,
 				D625A59426A5A55400540B84 /* CharacterTableViewCell.swift */,
 				D6233336269E0CE6008418C7 /* DetailViewController.swift */,
 				D63A2AE7269C5C990014A6E3 /* Model.swift */,
+				D625A59226A4528300540B84 /* ApiManager.swift */,
+				D6E003B026AFEEED000B4FBA /* UIImageViewExtension.swift */,
 				D63A2AD9269C3E3A0014A6E3 /* Main.storyboard */,
 				D63A2ADC269C3E3E0014A6E3 /* Assets.xcassets */,
 				D63A2ADE269C3E3E0014A6E3 /* LaunchScreen.storyboard */,
@@ -173,6 +176,7 @@
 				D6233337269E0CE7008418C7 /* DetailViewController.swift in Sources */,
 				D63A2AD6269C3E3A0014A6E3 /* SceneDelegate.swift in Sources */,
 				D625A59B26A5CA9900540B84 /* MainRouter.swift in Sources */,
+				D6E003B126AFEEEE000B4FBA /* UIImageViewExtension.swift in Sources */,
 				D625A59326A4528300540B84 /* ApiManager.swift in Sources */,
 				D625A59726A5CA3500540B84 /* RouterableController.swift in Sources */,
 				D63A2AE8269C5C990014A6E3 /* Model.swift in Sources */,

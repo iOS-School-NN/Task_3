@@ -18,27 +18,8 @@ class ApiManager {
     private let decoder = JSONDecoder()
     private let queueConcurrent = DispatchQueue(label: "ConcurrentQueue", qos: .background, attributes: .concurrent)
     private let group = DispatchGroup()
+    private let groupTwo = DispatchGroup()
     private let queueFirst = DispatchQueue.global(qos: .userInitiated)
-    
-    func getCustomCharactersFromFirstPage(character: [Character]) -> [customizedCharacterResult] {
-        var CustomizdeCharacters = [customizedCharacterResult]()
-        var image = UIImage()
-        for i in character.startIndex...character.endIndex {
-            
-        
-        image = getImage(imageURL: character[i].url)
-        getCharactersFromFirstPage(completion: { result in
-        switch result {
-        case .failure(let error):
-            print(error)
-        case .success(let characters):
-            let CustomChar = customizedCharacterResult(character: characters[i], image: image)
-            CustomizdeCharacters.append(CustomChar)
-            }
-        })
-        }
-        return CustomizdeCharacters
-    }
     
     func getCharactersFromFirstPage(completion: @escaping (Result<[Character], RickError>) -> Void) {
         let baseURL = URL(string: "https://rickandmortyapi.com/api/character")!
@@ -157,26 +138,68 @@ class ApiManager {
 
     }
     
+    func getLocation (locationURL: String, completion: @escaping (Result<Location, RickError>) -> Void) {
+        guard let url = URL(string: locationURL) else { return }
+        let request = URLRequest(url: url)
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print(error.localizedDescription)
+                completion(.failure(.network))
+                return
+            }
+            if let data = data, let location = try? self.decoder.decode(Location.self, from: data) {
+                completion(.success(location))
+            } else {
+                completion(.failure(.network))
+            }
+        }
+        task.resume()
+    }
     
-    func set(character: Character) -> UIImageView {
-        let imageSource = character.image
-        let characterImageView = UIImageView()
-        if let url = URL(string: imageSource) {
-            let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-                if let error = error {
-                    print(error)
-                } else {
-                    if let data = data, let image = UIImage(data: data) {
-                        DispatchQueue.main.async {
-                            characterImageView.image = image
-                        }
+    func getEpisodeFromURL (episodeURL: String, completion: @escaping (Result<Episode, RickError>) -> Void) {
+        let url = URL(string: episodeURL)
+        let request = URLRequest(url: url!)
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print(error.localizedDescription)
+                completion(.failure(.network))
+                return
+            }
+            if let data = data, let episode = try? self.decoder.decode(Episode.self, from: data) {
+                completion(.success(episode))
+            } else {
+                completion(.failure(.network))
+            }
+        }
+        task.resume()
+    }
+       
+    var episodesArray = [Episode]()
+    var stringOfEpisodesWithDate = String()
+    var queueForCharacters = DispatchQueue(label: "MyQueueee")
+    var completionHandler: ( (_ stringOfEpisodesWithData: String) -> Void )?
+    func getEpisodesForOneCharacter(character: Character, completion: @escaping (String) -> Void) {
+            
+            for i in 0..<character.episode.count {
+                self.groupTwo.enter()
+                
+                self.getEpisodeFromURL(episodeURL: character.episode[i]) { result in
+                    switch result {
+                        case .failure(let error):
+                            print(error.localizedDescription)
+                        case .success(let episode):
+                            self.episodesArray.append(episode)
+                            self.groupTwo.leave()
                     }
                 }
-                
             }
-            task.resume()
-        }
-        return characterImageView
+        
+            self.groupTwo.notify(queue: .main) {
+                self.episodesArray = self.episodesArray.sorted { ($0.id<$1.id) }
+                self.stringOfEpisodesWithDate = self.episodesArray.map({ "\($0.episode) / \($0.name) / \($0.air_date)" }).joined(separator: "\n")
+                completion(self.stringOfEpisodesWithDate)
+            }
+        
     }
     
 }

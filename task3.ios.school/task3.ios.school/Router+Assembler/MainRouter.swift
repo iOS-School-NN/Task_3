@@ -15,8 +15,8 @@ protocol NavigationRouting {
 
 protocol MainRouting: NavigationRouting {
     func initiateMainModule()
-    func goToDetailModule(character: Character, image: UIImage)
-    func goToModalDetailModule(character: Character, image: UIImage)
+    func goToDetailModule(character: Character)
+    func goToModalDetailModule(character: Character)
     
     init(navigationController: UINavigationController?, moduleAssembler: ModuleAssembling)
 }
@@ -37,13 +37,13 @@ class MainRouter: MainRouting {
         navigationController?.viewControllers = [startViewController]
     }
     
-    func goToDetailModule(character: Character, image: UIImage) {
-        let detailViewController = moduleAssembler.createDetailModule(character: character, image: image, router: self)
+    func goToDetailModule(character: Character) {
+        let detailViewController = moduleAssembler.createDetailModule(character: character, router: self)
         navigationController?.pushViewController(detailViewController, animated: true)
     }
     
-    func goToModalDetailModule(character: Character, image: UIImage) {
-        let detailViewController = moduleAssembler.createDetailModule(character: character, image: image, router: self)
+    func goToModalDetailModule(character: Character) {
+        let detailViewController = moduleAssembler.createDetailModule(character: character, router: self)
         navigationController?.present(detailViewController, animated: true, completion: nil)
     }
 }

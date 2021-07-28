@@ -10,7 +10,7 @@ import UIKit
 
 protocol ModuleAssembling {
     func createMainModule(router: MainRouting) -> UIViewController
-    func createDetailModule(character: Character, image: UIImage, router: MainRouting) -> UIViewController
+    func createDetailModule(character: Character, router: MainRouting) -> UIViewController
 }
 
 class ModuleAssembler: ModuleAssembling {
@@ -22,11 +22,10 @@ class ModuleAssembler: ModuleAssembling {
         return startViewComtroller
     }
     
-    func createDetailModule(character: Character, image: UIImage, router: MainRouting) -> UIViewController {
+    func createDetailModule(character: Character, router: MainRouting) -> UIViewController {
         let detailViewController = DetailViewController()
         detailViewController.router = router
         detailViewController.passedCharacter = character
-        detailViewController.passedImage = image
         return detailViewController
     }
 }

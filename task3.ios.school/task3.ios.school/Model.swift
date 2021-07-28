@@ -40,17 +40,33 @@ struct Info: Codable {
 
 struct EpisodeResponse: Codable {
     let info: Info
-    let results: [Episode]
+    let results: Episode
 }
 
 struct Episode: Codable {
     let id: Int
     let name: String
-    let airDate: String
+    let air_date: String
     let episode: String
     let characters: [String]
     let url: String
     let created: String
+}
+
+struct LocationResponse: Codable {
+    let info: Info
+    let results: Location
+}
+
+struct Location: Codable {
+    let id: Int
+    let name: String
+    let type: String
+    let dimension: String
+    let residents: [String]
+    let url: String
+    let created: String
+    
 }
 
 struct customizedCharacterResult {

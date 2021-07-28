@@ -19,7 +19,7 @@ class CharacterTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubview(characterImageView)
         addSubview(characterTitleLabel)
-        
+        self.accessoryType = .disclosureIndicator
         configureTitleLabel()
         configureImageView()
         setConstraints()
@@ -52,6 +52,17 @@ class CharacterTableViewCell: UITableViewCell {
             }
             task.resume()
         }
+    }
+    
+    func addParams(Character: Character) -> Void {
+        characterImageView.loadImageWithCache(from: Character.image) { (data, url) in
+            if (Character.image == url) {
+                DispatchQueue.main.async {
+                    self.characterImageView.image = UIImage(data: data)
+                }
+            }
+        }
+        characterTitleLabel.text = Character.name
     }
     
     func configureImageView() {

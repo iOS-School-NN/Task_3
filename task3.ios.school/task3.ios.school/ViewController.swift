@@ -32,7 +32,7 @@ class ViewController: UIViewController, Routerable {
         title = "Список персонажей"
         
         getCharacters()
-        CustomChar = apiManager?.getCustomCharactersFromFirstPage(character: characters1) as! [customizedCharacterResult]
+//        CustomChar = apiManager?.getCustomCharactersFromFirstPage(character: characters1) as! [customizedCharacterResult] 
         createTableView()
         getCharactersTwoToLastPage(number: 34)
     }
@@ -80,16 +80,14 @@ class ViewController: UIViewController, Routerable {
 
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return CustomChar.count
+        return characters1.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! CharacterTableViewCell
         let characterCell = characters1[indexPath.row]
-        cell.accessoryType = .disclosureIndicator
-        cell.characterTitleLabel.text = characterCell.name
-//        cell.imageView?.image = apiManager?.set(character: characterCell).image
-        cell.imageView?.image = apiManager?.getImage(imageURL: characterCell.image)
+        cell.addParams(Character: characterCell)
+        
         return cell
     }
     
@@ -97,6 +95,6 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         tableView.allowsSelection = true
         tableView.deselectRow(at: indexPath, animated: true)
         
-        router?.goToDetailModule(character: characters1[indexPath.row], image: ( tableView.cellForRow(at: indexPath)?.imageView?.image)!)
+        router?.goToDetailModule(character: characters1[indexPath.row])
     }
 }

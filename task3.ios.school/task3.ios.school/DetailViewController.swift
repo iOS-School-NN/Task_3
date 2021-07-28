@@ -11,6 +11,8 @@ import UIKit
 class DetailViewController: UIViewController, Routerable {
 
     typealias Router = MainRouting
+    var apiManager = ApiManager()
+    
     
     let nameLabel = UILabel()
     let genderLabel = UILabel()
@@ -21,15 +23,15 @@ class DetailViewController: UIViewController, Routerable {
     let placeNameLabel = UILabel()
     let typePlaceNameLabel = UILabel()
     let episodes = UILabel()
-//    let
+    let episodesTextView = UITextView()
     
     var router: Router?
     var passedCharacter: Character?
-    var passedImage: UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = passedCharacter?.name
+        eraseAllFields()
         view.addSubview(imageView)
         view.addSubview(nameLabel)
         view.addSubview(genderLabel)
@@ -39,7 +41,8 @@ class DetailViewController: UIViewController, Routerable {
         view.addSubview(placeNameLabel)
         view.addSubview(typePlaceNameLabel)
         view.addSubview(episodes)
-        customizeDetailVC(character: passedCharacter!, image: passedImage!)
+        view.addSubview(episodesTextView)
+        customizeDetailVC(character: passedCharacter!)
     
         
 
@@ -47,31 +50,68 @@ class DetailViewController: UIViewController, Routerable {
         // Do any additional setup after loading the view.
     }
     
-    func customizeDetailVC(character: Character, image: UIImage) {
+    func eraseAllFields() {
+        imageView.image = nil
+        nameLabel.text = ""
+        genderLabel.text = ""
+        statusLabel.text = ""
+        kindLabel.text = ""
+        place.text = ""
+        placeNameLabel.text = ""
+        typePlaceNameLabel.text = ""
+        episodes.text = ""
+        episodesTextView.text = ""
+    }
+    
+    func customizeDetailVC(character: Character) {
         fillAllfields(character: character)
-        customizeImageView(image: image)
+        customizeImageView()
         customizeNameLabel()
         customizeGenderLabel()
         customizeStatusLabel()
         customizeKindLabel()
         customizePlace()
         customizePlaceNameLabel()
-        
+        customizeTypePlaceNameLabel()
+        customizeEpisode()
+        customizeEpisodeTextView()
     }
     
     func fillAllfields(character: Character) {
+        imageView.loadImageWithCache(from: character.image) { (data, url) in
+            if character.image == url {
+                DispatchQueue.main.async {
+                    self.imageView.image = UIImage(data: data)
+                }
+            }
+        }
         nameLabel.text = character.name
         genderLabel.text = character.gender
         statusLabel.text = character.status
         kindLabel.text = character.species
         place.text = "Location:"
-        placeNameLabel.text = "•" + character.location.name
-        typePlaceNameLabel.text = "•" + character.location.url
-        episodes.text = "Episodes"
+        apiManager.getLocation(locationURL: character.location.url) { result in
+            switch result {
+            case.failure (let error):
+                print(error)
+                print(character.location.url)
+            case.success (let location):
+                DispatchQueue.main.async {
+                self.placeNameLabel.text = "• " + location.name
+                self.typePlaceNameLabel.text = "• " + location.type
+                }
+            }
+        }
+        episodes.text = "Episodes:"
+        apiManager.getEpisodesForOneCharacter(character: character) { (textForView) in
+            DispatchQueue.main.async {
+                self.episodesTextView.text = textForView
+            }
+        }
+
     }
     
-    func customizeImageView (image: UIImage) {
-        imageView.image = image
+    func customizeImageView() {
         imageView.contentMode = .scaleToFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12).isActive = true
@@ -130,6 +170,37 @@ class DetailViewController: UIViewController, Routerable {
         placeNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         placeNameLabel.topAnchor.constraint(equalTo: place.bottomAnchor, constant: 10).isActive = true
         placeNameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+    }
+    
+    func customizeTypePlaceNameLabel() {
+        typePlaceNameLabel.textAlignment = .left
+        typePlaceNameLabel.textColor = UIColor.white
+        typePlaceNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        typePlaceNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        typePlaceNameLabel.topAnchor.constraint(equalTo: placeNameLabel.bottomAnchor, constant: 10).isActive = true
+        typePlaceNameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+    }
+    
+    func customizeEpisode() {
+        episodes.textAlignment = .left
+        episodes.textColor = UIColor.white
+        episodes.translatesAutoresizingMaskIntoConstraints = false
+        episodes.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12).isActive = true
+        episodes.topAnchor.constraint(equalTo: typePlaceNameLabel.bottomAnchor, constant: 10).isActive = true
+        episodes.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+    }
+    
+    func customizeEpisodeTextView() {
+        episodesTextView.textAlignment = .left
+        episodesTextView.textColor = UIColor.white
+        episodesTextView.translatesAutoresizingMaskIntoConstraints = false
+        episodesTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12).isActive = true
+        episodesTextView.topAnchor.constraint(equalTo: episodes.bottomAnchor, constant: 10).isActive = true
+        episodesTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+        episodesTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30).isActive = true
+        
+        episodesTextView.isEditable = false
+        
     }
 
     /*
