@@ -14,8 +14,8 @@ enum API {
             .eraseToAnyPublisher()
     }
     
-    static func fetchCharacterLocation(urlString: String) -> AnyPublisher<LocationType, Error> {
-        let url = URL(string: urlString)!
+    static func fetchCharacterLocation(urlString: String) -> AnyPublisher<LocationType, Error>? {
+        guard let url = URL(string: urlString) else { return nil }
         return URLSession.shared
             .dataTaskPublisher(for: url)
             //            .handleEvents(receiveOutput: { print(NSString(data: $0.data, encoding: String.Encoding.utf8.rawValue)!) })

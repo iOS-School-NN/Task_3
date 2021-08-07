@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Foundation
 
 class CharacterViewModel: ObservableObject {
     @Published private(set) var state = State()
@@ -13,13 +14,16 @@ class CharacterViewModel: ObservableObject {
     
     func fetchCharacter(characterId: Int) {
         API.fetchCharacter(characterId: characterId)
+            .subscribe(on: DispatchQueue.global(qos: .background))
             .sink(receiveCompletion: onReceive,
                   receiveValue: onReceiveCharacter)
             .store(in: &subscriptions)
+        
     }
     
     func fetchCharacterLocation(urlString: String) {
-        API.fetchCharacterLocation(urlString: urlString)
+        API.fetchCharacterLocation(urlString: urlString)?
+            .subscribe(on: DispatchQueue.global(qos: .background))
             .sink(receiveCompletion: onReceive,
                   receiveValue: onReceiveCharacterLocation)
             .store(in: &subscriptions)
@@ -28,6 +32,7 @@ class CharacterViewModel: ObservableObject {
     func fetchCharacterEpisodes(urlString: String) {
 //        print(urlString)
         API.fetchCharacterEpisodes(urlString: urlString)
+            .subscribe(on: DispatchQueue.global(qos: .background))
             .sink(receiveCompletion: onReceive,
                   receiveValue: onReceiveCharacterEpisode)
             .store(in: &subscriptions)
@@ -35,6 +40,7 @@ class CharacterViewModel: ObservableObject {
     
     func fetchNextPageIfPossible() {
         API.fetchCharacters(query: "swift", page: state.page)
+            .subscribe(on: DispatchQueue.global(qos: .background))
             .sink(receiveCompletion: onReceive,
                   receiveValue: onReceive)
             .store(in: &subscriptions)
