@@ -4,10 +4,10 @@ protocol CharactersListPresenterProtocol: AnyObject {
     var characters: [Character] { get }
     func fetchNewPage()
     func toCharacterDetails(id: Int)
-    func fetchImage(urlString: String, completion: @escaping (UIImage?) -> Void)
+    func fetchImage(urlString: String, completion: @escaping (Data?) -> Void)
 }
 
-// Данный класс представляет собой презентор, который ответственнен за бизнес-логику модуля "Список персонажей"
+// Данный класс представляет собой презентер, который ответственнен за бизнес-логику модуля "Список персонажей"
 final class CharactersListPresenter: CharactersListPresenterProtocol {
 
     private weak var view: CharactersListViewProtocol!
@@ -55,7 +55,7 @@ final class CharactersListPresenter: CharactersListPresenterProtocol {
     }
 
     // Метод-обертка для получения изображения персонажа для ячейки таблицы
-    func fetchImage(urlString: String, completion: @escaping (UIImage?) -> Void) {
+    func fetchImage(urlString: String, completion: @escaping (Data?) -> Void) {
         networkService.fetchImage(urlString: urlString, completion: completion)
     }
 

@@ -6,13 +6,16 @@ protocol NetworkServiceProtocol {
     func fetchCharacter(urlString: String, completion: @escaping (Character?) -> Void)
     func fetchEpisode(urlString: String, completion: @escaping (Episode?) -> Void)
     func fetchLocation(urlString: String, completion: @escaping (Location?) -> Void)
-    func fetchImage(urlString: String, completion: @escaping (UIImage?) -> Void)
+    func fetchImage(urlString: String, completion: @escaping (Data?) -> Void)
 }
 
 // Класс ответственный за получение и декодирование данных из сети интернет
 // В данном приложении используется для получения данных из API https://rickandmortyapi.com
 final class NetworkService: NetworkServiceProtocol {
 
+    // Кэш для хранения изображений в Data
+    let imageDataCache = NSCache<AnyObject, AnyObject>()
+    
     // Построение запроса данных по URL
     private func request(urlString: String, completion: @escaping (Data?, Error?) -> Void) {
         guard let url = URL(string: urlString) else { return }
@@ -91,18 +94,15 @@ final class NetworkService: NetworkServiceProtocol {
     }
 
     // Получение изображения из сети интернет или его получение из кеша
-    func fetchImage(urlString: String, completion: @escaping (UIImage?) -> Void) {
-        if let imageFromCache = imageCache.object(forKey: urlString as AnyObject) as? UIImage {
-            completion(imageFromCache)
+    func fetchImage(urlString: String, completion: @escaping (Data?) -> Void) {
+        if let imageDataFromCache = imageDataCache.object(forKey: urlString as AnyObject) as? Data {
+            completion(imageDataFromCache)
             return
         }
-        fetchData(urlString: urlString) { data in
-            guard let data = data, let image = UIImage(data: data) else {
-                completion(nil)
-                return
-            }
-            imageCache.setObject(image, forKey: urlString as AnyObject)
-            completion(image)
+
+        fetchData(urlString: urlString) { [weak self] imageData in
+            self?.imageDataCache.setObject(imageData as AnyObject, forKey: urlString as AnyObject)
+            completion(imageData)
         }
     }
 }

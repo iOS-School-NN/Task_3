@@ -37,8 +37,13 @@ final class CharactersListView: UITableViewController, CharactersListViewProtoco
         cell.imageView?.clipsToBounds = true
 
         // Загрузка изображения для ячейки
-        presenter.fetchImage(urlString: presenter.characters[indexPath.item].imageURL) { image in
-            cell.imageView?.image = image
+        presenter.fetchImage(urlString: presenter.characters[indexPath.item].imageURL) { [weak self] imageData in
+            guard let imageData = imageData else {
+                return
+            }
+
+            self?.presenter.characters[indexPath.item].imageData = imageData
+            cell.imageView?.image = UIImage(data: imageData)
             cell.layoutSubviews()
         }
 

@@ -1,7 +1,5 @@
 import UIKit
 
-let imageCache = NSCache<AnyObject, AnyObject>()
-
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 

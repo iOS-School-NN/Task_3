@@ -21,8 +21,7 @@ final class CharacterDetailPresenter: CharacterDetailPresenterProtocol {
 
         // Передача основной информации о выбранном персонаже во вью
         view.setInformation(imageData: character.imageData, name: character.name, gender: character.gender, status: character.status, species: character.species)
-
-        loadImage()
+        
         loadLocation()
         loadEpisodes()
     }
@@ -48,17 +47,6 @@ final class CharacterDetailPresenter: CharacterDetailPresenterProtocol {
                 self?.character.episodes?.append(episode)
                 self?.view.setEpisode(episode: episode.episode, name: episode.name, airDate: episode.airDate)
             }
-        }
-    }
-
-    private func loadImage() {
-        // Загрузка изображения персонажа из сети или кеша и его передача во вью
-        networkService.fetchImage(urlString: character.imageURL) { [weak self] image in
-            guard let image = image else {
-                return
-            }
-
-            self?.view.setImage(image: image)
         }
     }
 

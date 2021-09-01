@@ -11,6 +11,7 @@ protocol ModuleRouterProtocol {
 final class ModuleRouter: ModuleRouterProtocol {
     private let navigationController: UINavigationController?
     private let moduleBuilder: ModuleBuilderProtocol?
+    private let networkService: NetworkServiceProtocol = NetworkService()
 
     init(navigationController: UINavigationController, moduleBuilder: ModuleBuilderProtocol) {
         self.navigationController = navigationController
@@ -20,7 +21,7 @@ final class ModuleRouter: ModuleRouterProtocol {
     // Инициализация модуля со списком персонажей как корневого
     func initViewController() {
         if let navigationController = navigationController {
-            guard let module = moduleBuilder?.buildCharactersListModule(moduleRouter: self, networkService: NetworkService()) else {
+            guard let module = moduleBuilder?.buildCharactersListModule(moduleRouter: self, networkService: networkService) else {
                 return
             }
             navigationController.viewControllers = [module]
@@ -30,7 +31,7 @@ final class ModuleRouter: ModuleRouterProtocol {
     // Переход к модулю конкретного персонажа
     func toCharacterDetailModule(character: Character) {
         if let navigationController = navigationController {
-            guard let module = moduleBuilder?.buildCharacterDetailModule(character: character, moduleRouter: self, networkService: NetworkService()) else {
+            guard let module = moduleBuilder?.buildCharacterDetailModule(character: character, moduleRouter: self, networkService: networkService) else {
                 return
             }
             navigationController.pushViewController(module, animated: true)
