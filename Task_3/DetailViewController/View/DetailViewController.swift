@@ -25,8 +25,8 @@ class DetailViewController: UIViewController, MainViewControllerDelegate, Detail
     @IBOutlet private weak var detailEpisodesTitleLabel: UILabel!
     @IBOutlet private weak var detailDescriptionOfEpisodesTextView: UITextView!
     
-    var detailViewModel: DetailViewModel?
-    var characterCardData: Result?
+    private var detailViewModel: DetailViewModel?
+    private var characterCardData: Result?
     
     override func viewDidLoad() {
         super.viewDidLoad()
